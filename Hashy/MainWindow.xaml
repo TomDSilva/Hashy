@@ -12,7 +12,7 @@
         WindowStyle="None"
         Background="#181735"
         MinHeight="300"
-        MinWidth="500">
+        MinWidth="600">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -44,12 +44,12 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <DockPanel>
+            <DockPanel Grid.ColumnSpan="2">
                 <Image Width="20" Height="20"
                    HorizontalAlignment="Left"
                    Source="Images/Hashy.png"/>
 
-                <TextBlock Text="Hashy - A file hash checker"
+                <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022"
                        Foreground="White"
                        Grid.Column="0"
                        VerticalAlignment="Center"
@@ -57,15 +57,7 @@
                        FontWeight="Medium"/>
             </DockPanel>
 
-
-            <TextBlock Text="© 2022"
-                       Foreground="LightGray"
-                       Grid.Column="1"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontFamily="Fonts/#Dosis"/>
-
-            <TextBlock Text="PRE-RELEASE ALPHA"
+            <TextBlock Text="PRE-RELEASE ALPHA - v0.0.2"
                        Foreground="LightGray"
                        Grid.Column="2"
                        VerticalAlignment="Center"
@@ -157,7 +149,9 @@
                         <ControlTemplate TargetType="Button">
                             <Border Width="100" Height="18"
                                     CornerRadius="12"
-                                    Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="#0F0F2D"
+                                    BorderThickness="1">
                                 <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
                             </Border>
@@ -205,7 +199,9 @@
                         <ControlTemplate TargetType="Button">
                             <Border Width="100" Height="18"
                                     CornerRadius="12"
-                                    Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="#0F0F2D"
+                                    BorderThickness="1">
                                 <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
                             </Border>
@@ -276,13 +272,16 @@
                             <ControlTemplate TargetType="Button">
                                 <Border Width="100" Height="18"
                                     CornerRadius="12"
-                                    Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}"
+                                        BorderBrush="#0F0F2D"
+                                        BorderThickness="1">
                                     <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
+
                 </StackPanel>
             </Grid>
 
@@ -309,7 +308,9 @@
                     <ControlTemplate TargetType="Button">
                         <Border Width="100" Height="18"
                                     CornerRadius="12"
-                                    Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="#0F0F2D"
+                                    BorderThickness="1">
                             <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
                         </Border>
@@ -391,7 +392,8 @@
                             <Border Width="100" Height="18"
                                     CornerRadius="12"
                                     Background="{TemplateBinding Background}"
-                                    BorderBrush="White">
+                                    BorderBrush="#0F0F2D"
+                                    BorderThickness="1">
                                 <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
                             </Border>
@@ -432,7 +434,9 @@
                     <ControlTemplate TargetType="Button">
                         <Border Width="100" Height="18"
                                     CornerRadius="12"
-                                    Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="#0F0F2D"
+                                    BorderThickness="1">
                             <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
                         </Border>

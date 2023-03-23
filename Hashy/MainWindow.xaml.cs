@@ -2,16 +2,20 @@
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
+
+// TODO : Check file for error tag
+// TODO : check if tb is null and goes to default location, if not then go to path provided if its a real path
+// TODO : Real buttons for min, max, close window
+// TODO : About page? Add Github, Linkedin?
 
 namespace Hashy
 {
@@ -20,7 +24,7 @@ namespace Hashy
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string hashMode;
+        private string? hashMode;
         public MainWindow()
         {
             InitializeComponent();
@@ -31,19 +35,9 @@ namespace Hashy
             hashModeComboBox.SelectedIndex = 0;
 
             // TEMP testing parameters not meant for production:
-            dirTextBox.Text = "E:\\deleteme\\source";
-            outputTextBox.Text = "E:\\deleteme\\output.csv";
-            reportTextBox.Text = "E:\\deleteme\\output.csv";
-        }
-
-        
-        // Force form size and prevent any adjustment:
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            this.MinHeight = 400;
-            this.MinWidth = 600;
-            this.MaxHeight = 400;
-            this.MaxWidth = 600;
+            dirTextBox.Text = "C:\\Hashy Test Folder\\Source";
+            outputTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
+            reportTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
         }
 
         // TEST debug button not meant for production version:
@@ -57,7 +51,7 @@ namespace Hashy
         private void scanButton_Click(object sender, EventArgs e)
         {
             // Grab the selected hash mode into a string:
-            hashMode = hashModeComboBox.SelectedItem.ToString();
+            hashMode = ((ComboBoxItem)hashModeComboBox.SelectedItem).Content.ToString()!;
 
             // Create and start the scan thread:
             Thread scanThread = new Thread(InitialScan);
@@ -177,11 +171,11 @@ namespace Hashy
             // Set totalProgressBar max value to the total of the files we are going to loop through:
             SetProgressBarMax(totalProgressBar, files.Count);
 
-            StreamWriter outputFile = OpenFile(outputTextBox.Text);
+            StreamWriter outputFile = OpenFile(GetTBText(outputTextBox));
 
             WriteLine(outputFile, @"f7c07c6ab1c9faaccee57b77b826ff51\r\ncf3b9982a86afb4dd9b50556f1817aa9\r\ne1d4aa4e629ee2d4e553c538bfcad177\r\ne724f3d18bf2985fea81a912c642ffba\r\nc37dd1fc6a3ddd4fdd77fe3ceedf8974\r\n96d0ee391f51eb3e2a00064ed3a25eac\r\n11ae1e159900bfd8fe6731825ffe43e9\r\nbaa9d174ce36a1ac00a5fdbde0b55898\r\n0957faec8615cc14a0c3b229c92d38ab\r\nfa388c8c3a97671b1557a4ae53bc468b");
 
-            string outputHeader = $"{started.ToString()},{dirTextBox.Text},{hashMode}";
+            string outputHeader = $"{started.ToString()},{GetTBText(dirTextBox)},{hashMode}";
             WriteLine(outputFile, outputHeader);
 
             int i = 1;
@@ -247,12 +241,19 @@ namespace Hashy
 
         private string GetTextBoxText(System.Windows.Controls.TextBox tb)
         {
-            string text = "";
-            tb.Dispatcher.Invoke(delegate
+            if (tb.Dispatcher.CheckAccess())
             {
-                text = tb.Text;
-            });
-            return text;
+                return tb.Text;
+            }
+            else
+            {
+                string text = "";
+                tb.Dispatcher.Invoke(delegate
+                {
+                    text = tb.Text;
+                });
+                return text;
+            }
         }
 
         private void Check()
@@ -356,7 +357,7 @@ namespace Hashy
             {
                 StreamReader reader = new StreamReader(File.OpenRead(file));
                 List<FileDetails> outputList = new List<FileDetails>();
-                string uid = reader.ReadLine();
+                string uid = reader.ReadLine()!;
                 if (uid != @"f7c07c6ab1c9faaccee57b77b826ff51\r\ncf3b9982a86afb4dd9b50556f1817aa9\r\ne1d4aa4e629ee2d4e553c538bfcad177\r\ne724f3d18bf2985fea81a912c642ffba\r\nc37dd1fc6a3ddd4fdd77fe3ceedf8974\r\n96d0ee391f51eb3e2a00064ed3a25eac\r\n11ae1e159900bfd8fe6731825ffe43e9\r\nbaa9d174ce36a1ac00a5fdbde0b55898\r\n0957faec8615cc14a0c3b229c92d38ab\r\nfa388c8c3a97671b1557a4ae53bc468b")
                 {
                     return false;
@@ -373,8 +374,8 @@ namespace Hashy
             {
                 StreamReader reader = new StreamReader(File.OpenRead(file));
                 List<FileDetails> outputList = new List<FileDetails>();
-                string uid = reader.ReadLine();
-                string header = reader.ReadLine();
+                string uid = reader.ReadLine()!;
+                string header = reader.ReadLine()!;
                 var values = header.Split(',');
                 reader.Close();
                 return values[values.Length-1];
@@ -388,17 +389,17 @@ namespace Hashy
             {
                 StreamReader reader = new StreamReader(File.OpenRead(file));
                 List<FileDetails> outputList = new List<FileDetails>();
-                string uid = reader.ReadLine();
-                string headerline = reader.ReadLine();
+                string uid = reader.ReadLine()!;
+                string headerline = reader.ReadLine()!;
                 while (!reader.EndOfStream)
                 {
-                    var line = reader.ReadLine();
+                    var line = reader.ReadLine()!;
                     outputList.Add(line);
                 }
                 reader.Close();
                 return outputList;
             }
-            return null;
+            return null!;
         }
 
         private StreamWriter OpenFile(string filePath)
@@ -454,6 +455,7 @@ namespace Hashy
             DisableButton(scanButton);
             DisableButton(sourceButton);
             DisableButton(outputButton);
+            DisableButton(existingReportButton);
 
             // Disable all textbox's:
             DisableTextBox(dirTextBox);
@@ -471,6 +473,7 @@ namespace Hashy
             EnableButton(scanButton);
             EnableButton(sourceButton);
             EnableButton(outputButton);
+            EnableButton(existingReportButton);
 
             // Enable all textbox's:
             EnableTextBox(dirTextBox);
@@ -500,8 +503,8 @@ namespace Hashy
             else
             {
                 btn.Dispatcher.Invoke(delegate
-                    {
-                    btn.IsEnabled = status;
+                {
+                    SetButtonStatus(btn, status);
                 });
             }
         }
@@ -526,7 +529,7 @@ namespace Hashy
             {
                 tb.Dispatcher.Invoke(delegate
                 {
-                    tb.IsEnabled = status;
+                    SetTextBoxStatus(tb, status);
                 });
             }
         }
@@ -641,8 +644,8 @@ namespace Hashy
                 });
             }
         }
-
-        private string ReadTBText(System.Windows.Controls.TextBox tb)
+        
+        private string GetTBText(System.Windows.Controls.TextBox tb)
         {
             if (tb.Dispatcher.CheckAccess())
             {
@@ -650,10 +653,13 @@ namespace Hashy
             }
             else
             {
+                string tbText = "";
                 tb.Dispatcher.Invoke(delegate
                 {
-                    return tb.Text;
+                    tbText = tb.Text;
                 });
+
+                return tbText;
             }
         }
 
