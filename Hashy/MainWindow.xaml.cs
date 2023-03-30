@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using Ookii.Dialogs.Wpf;
+﻿using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,11 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
-// TODO : Check file for error tag
-// TODO : check if tb is null and goes to default location, if not then go to path provided if its a real path
-// TODO : Real buttons for min, max, close window
+// TODO : Investigate: when app is fullscreen it goes over edges.
+// TODO : Check file for error tag.
 // TODO : About page? Add Github, Linkedin?
+// TODO : Investigate nullable properties.
+// TODO : Change hover over color of window buttons.
+
+//Links that helped me build this:
+//https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
+//https://yqnn.github.io/svg-path-editor/
+//https://stackoverflow.com/questions/48540883/change-the-button-path-data-based-on-condition-in-wpf
 
 namespace Hashy
 {
@@ -29,15 +36,19 @@ namespace Hashy
         {
             InitializeComponent();
 
+            // TEMP testing parameters not meant for production:
+            dirTextBox.Text = "C:\\Hashy Test Folder\\Source";
+            outputTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
+            reportTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
+
             consoleRichTextBox.Document.Blocks.Clear();
 
             // Set the default hash mode to 0 (being MD5):
             hashModeComboBox.SelectedIndex = 0;
 
-            // TEMP testing parameters not meant for production:
-            dirTextBox.Text = "C:\\Hashy Test Folder\\Source";
-            outputTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
-            reportTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
+            SetScanButtonStatus();
+            SetCheckButtonStatus();
+            SetClearButtonStatus();
         }
 
         // TEST debug button not meant for production version:
@@ -45,6 +56,8 @@ namespace Hashy
         {
             //var about = new About();
             //about.Show();
+            //EnableButton(scanButton);
+            //AppendLine(consoleRichTextBox, "Set scanbutton to enabled");
             Console.ReadLine();
         }
 
@@ -67,17 +80,13 @@ namespace Hashy
 
         private void sourceButton_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog openFileDialog = new OpenFileDialog();
-            //if (openFileDialog.ShowDialog() == true)
-            //{
-            //    dirTextBox.Text = File.ReadAllText(openFileDialog.FileName);
-            //}
-
             VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog();
             folderBrowserDialog.Description = "Select folder to scan...";
             folderBrowserDialog.UseDescriptionForTitle = true;
             folderBrowserDialog.ShowDialog();
             dirTextBox.Text = folderBrowserDialog.SelectedPath;
+
+            SetScanButtonStatus();
         }
 
         private void outputButton_Click(object sender, EventArgs e)
@@ -90,6 +99,8 @@ namespace Hashy
             {
                 outputTextBox.Text = openFileDialog.FileName;
             }
+
+            SetScanButtonStatus();
         }
 
         private void existingReportButton_Click(object sender, EventArgs e)
@@ -99,8 +110,10 @@ namespace Hashy
             openFileDialog.Title = "Select existing report...";
             if (openFileDialog.ShowDialog() == true)
             {
-                outputTextBox.Text = openFileDialog.FileName;
+                reportTextBox.Text = openFileDialog.FileName;
             }
+
+            SetCheckButtonStatus();
         }
 
         private void clearTerminalButton_Click(object sender, EventArgs e)
@@ -180,6 +193,8 @@ namespace Hashy
 
             int i = 1;
 
+            bool error = false;
+
             // Loop through all the files:
             foreach (var file in files)
             {
@@ -190,15 +205,50 @@ namespace Hashy
                 if (hashMode == "MD5")
                 {
                     // Fill value with the output from the MD5 file calculation:
-                    value = CalculateMD5(file);
+                    try
+                    {
+                        value = CalculateMD5(file);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                        SetProgressBar(totalProgressBar, i);
+                        string f = 100 / files.Count * i + "%";
+                        SetPercentageLabel(totalPercentageLabel, f);
+                        if (i == files.Count)
+                        {
+                            SetPercentageLabel(totalPercentageLabel, "100%");
+                        }
+                        i = i + 1;
+
+                        continue;
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                        SetProgressBar(totalProgressBar, i);
+                        string f = 100 / files.Count * i + "%";
+                        SetPercentageLabel(totalPercentageLabel, f);
+                        if (i == files.Count)
+                        {
+                            SetPercentageLabel(totalPercentageLabel, "100%");
+                        }
+                        i = i + 1;
+
+                        continue;
+                    }
                 }
                 else if (hashMode == "SHA256")
                 {
+                    // Fill value with the output from the SHA256 file calculation:
                     value = CalculateSHA256(file);
                 }
                 else
                 {
                     value = "!!!ERROR!!!";
+                    error = true;
                 }
 
                 // Add the value output to the fileDetails list along with the current file:
@@ -226,10 +276,15 @@ namespace Hashy
             AppendLine(consoleRichTextBox, $"Scan finished at {finished}");
 
             var scanDuration = finished - started;
-            // TODO: Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
+            // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
             // Update the console with how long the scan took. Formatting to remove decimal places.
 
             AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
+
+            if (error)
+            {
+                AppendLine(consoleRichTextBox, "Warning! There was an error", Brushes.Red);
+            }
 
             hashMode = "";
 
@@ -237,23 +292,6 @@ namespace Hashy
 
             // Enable UI:
             EnableUI();
-        }
-
-        private string GetTextBoxText(System.Windows.Controls.TextBox tb)
-        {
-            if (tb.Dispatcher.CheckAccess())
-            {
-                return tb.Text;
-            }
-            else
-            {
-                string text = "";
-                tb.Dispatcher.Invoke(delegate
-                {
-                    text = tb.Text;
-                });
-                return text;
-            }
         }
 
         private void Check()
@@ -270,7 +308,8 @@ namespace Hashy
             AppendLine(consoleRichTextBox, "Checking files against existing report:");
             AppendLine(consoleRichTextBox, reportLocation);
 
-            if (UIDCheck(reportLocation)){
+            if (UIDCheck(reportLocation))
+            {
                 AppendLine(consoleRichTextBox, "Report file passed UID check", Brushes.Green);
 
                 // Set totalProgressBar back to 0 (in case previously run):
@@ -291,6 +330,15 @@ namespace Hashy
 
                 foreach (FileDetails file in report)
                 {
+                    if (file.Hash == "!!!ERROR!!!")
+                    {
+                        SetProgressBar(totalProgressBar, i);
+                        string e = 100 / report.Count * i + "%";
+                        SetPercentageLabel(totalPercentageLabel, e);
+
+                        continue;
+                    }
+
                     string hash = "";
 
                     AppendLine(consoleRichTextBox, $"Checking {file.FilePath}...");
@@ -303,7 +351,7 @@ namespace Hashy
                     {
                         hash = CalculateSHA256(file.FilePath);
                     }
-                    
+
                     DateTime lastModified = GetFileLastModified(file.FilePath);
 
                     if (file.Hash == hash & DateTimeSecondsEquals(file.LastModified, lastModified))
@@ -342,13 +390,67 @@ namespace Hashy
                     }
                     i = i + 1;
                 }
-            } else
+            }
+            else
             {
                 AppendLine(consoleRichTextBox, "!!!ERROR!!! Report file failed UID check", Brushes.Red);
             }
 
             // Enable UI:
             EnableUI();
+        }
+
+        private string GetTextBoxText(System.Windows.Controls.TextBox tb)
+        {
+            if (tb.Dispatcher.CheckAccess())
+            {
+                return tb.Text;
+            }
+            else
+            {
+                string text = "";
+                tb.Dispatcher.Invoke(delegate
+                {
+                    text = tb.Text;
+                });
+                return text;
+            }
+        }
+
+        private void SetScanButtonStatus()
+        {
+            if (Directory.Exists(GetTBText(dirTextBox)) && File.Exists(GetTBText(outputTextBox)))
+            {
+                EnableButton(scanButton);
+            }
+            else
+            {
+                DisableButton(scanButton);
+            }
+        }
+
+        private void SetCheckButtonStatus()
+        {
+            if (File.Exists(GetTBText(reportTextBox)))
+            {
+                EnableButton(checkButton);
+            }
+            else
+            {
+                DisableButton(checkButton);
+            }
+        }
+
+        private void SetClearButtonStatus()
+        {
+            if (GetRTBVO(consoleRichTextBox) == 0)
+            {
+                DisableButton(clearTerminalButton);
+            }
+            else
+            {
+                EnableButton(clearTerminalButton);
+            }
         }
 
         private bool UIDCheck(string file)
@@ -378,7 +480,7 @@ namespace Hashy
                 string header = reader.ReadLine()!;
                 var values = header.Split(',');
                 reader.Close();
-                return values[values.Length-1];
+                return values[values.Length - 1];
             }
             throw new ArgumentException();
         }
@@ -404,7 +506,7 @@ namespace Hashy
 
         private StreamWriter OpenFile(string filePath)
         {
-            // TODO: System.IO.IOException: 'The process cannot access the file 'E:\deleteme\output.csv' because it is being used by another process.'
+            // TODO : System.IO.IOException: 'The process cannot access the file 'E:\deleteme\output.csv' because it is being used by another process.'
             StreamWriter writer = new StreamWriter(filePath);
             return writer;
         }
@@ -419,15 +521,44 @@ namespace Hashy
             writer.Close();
         }
 
+        //static string CalculateMD5(string filename)
+        //{
+        //    using (var md5 = MD5.Create())
+        //    {
+        //        try
+        //        {
+        //            using (var stream = File.OpenRead(filename))
+        //            {
+        //                var hash = md5.ComputeHash(stream);
+        //                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+        //            }
+        //        }
+        //        catch
+        //        {
+        //            MessageBox.Show($"ERROR - Unable to read file:\n{filename}");
+        //            return "";
+        //        }
+
+        //    }
+        //}
+
         static string CalculateMD5(string filename)
         {
             using (var md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(filename))
+                try
                 {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        var hash = md5.ComputeHash(stream);
+                        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    }
                 }
+                catch
+                {
+                    throw;
+                }
+
             }
         }
 
@@ -435,11 +566,20 @@ namespace Hashy
         {
             using (var sha256 = SHA256.Create())
             {
-                using (var stream = File.OpenRead(filename))
+                try
                 {
-                    var hash = sha256.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        var hash = sha256.ComputeHash(stream);
+                        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    }
                 }
+                catch
+                {
+                    MessageBox.Show($"ERROR - Unable to read file:\n{filename}");
+                    return "";
+                }
+
             }
         }
 
@@ -469,11 +609,12 @@ namespace Hashy
         private void EnableUI()
         {
             // Enable all buttons:
-            EnableButton(checkButton);
-            EnableButton(scanButton);
             EnableButton(sourceButton);
             EnableButton(outputButton);
             EnableButton(existingReportButton);
+            SetScanButtonStatus();
+            SetCheckButtonStatus();
+            SetClearButtonStatus();
 
             // Enable all textbox's:
             EnableTextBox(dirTextBox);
@@ -563,19 +704,19 @@ namespace Hashy
         {
             if (rtb.Dispatcher.CheckAccess())
             {
-               // rtb.AppendText(text);
-
                 TextRange rangeOfText = new TextRange(rtb.Document.ContentEnd, rtb.Document.ContentEnd);
                 rangeOfText.Text = text;
                 rangeOfText.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
                 rtb.AppendText(Environment.NewLine);
                 rtb.ScrollToEnd();
+                SetClearButtonStatus();
             }
             else
             {
                 rtb.Dispatcher.Invoke(delegate
                 {
                     AppendLine(rtb, text);
+                    SetClearButtonStatus();
                 });
             }
         }
@@ -644,7 +785,7 @@ namespace Hashy
                 });
             }
         }
-        
+
         private string GetTBText(System.Windows.Controls.TextBox tb)
         {
             if (tb.Dispatcher.CheckAccess())
@@ -660,6 +801,24 @@ namespace Hashy
                 });
 
                 return tbText;
+            }
+        }
+
+        private double GetRTBVO(System.Windows.Controls.RichTextBox rtb)
+        {
+            if (rtb.Dispatcher.CheckAccess())
+            {
+                return rtb.VerticalOffset;
+            }
+            else
+            {
+                double rtbVO = 0;
+                rtb.Dispatcher.Invoke(delegate
+                {
+                    rtbVO = rtb.VerticalOffset;
+                });
+
+                return rtbVO;
             }
         }
 
@@ -682,7 +841,7 @@ namespace Hashy
             }
             else
             {
-                this.WindowState= WindowState.Normal;
+                this.WindowState = WindowState.Normal;
             }
         }
 
@@ -706,11 +865,6 @@ namespace Hashy
             }
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
-        }
-
-        private void scanButton_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

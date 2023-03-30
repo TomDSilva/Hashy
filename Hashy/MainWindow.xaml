@@ -1,258 +1,110 @@
-﻿<!--Links that helped me build this:
-    https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit-->
-    
-    <Window x:Class="Hashy.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Hashy"
-        mc:Ignorable="d"
-        Title="Hashy" Height="450" Width="800"
-        WindowStyle="None"
-        Background="#181735"
-        MinHeight="300"
-        MinWidth="600">
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="18"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="18"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="22"/>
-            <RowDefinition Height="18"/>
-            <RowDefinition Height="18"/>
-            <RowDefinition/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-
-        <Grid Background="#0F0F2D"
-              Grid.ColumnSpan="2"
-              MouseDown="Grid_MouseDown">
+﻿<Window x:Class="Hashy.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Hashy" mc:Ignorable="d" Title="Hashy" Height="450" Width="800" WindowStyle="None" Background="#181735" MinHeight="300" MinWidth="600" AllowsTransparency="True">
+    <Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition Height="18"/>
+                <RowDefinition/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <DockPanel Grid.ColumnSpan="2">
-                <Image Width="20" Height="20"
-                   HorizontalAlignment="Left"
-                   Source="Images/Hashy.png"/>
 
-                <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022"
-                       Foreground="White"
-                       Grid.Column="0"
-                       VerticalAlignment="Center"
-                       FontFamily="Fonts/#Dosis"
-                       FontWeight="Medium"/>
-            </DockPanel>
+            <Grid Background="#0F0F2D" Grid.ColumnSpan="2" MouseDown="Grid_MouseDown">
 
-            <TextBlock Text="PRE-RELEASE ALPHA - v0.0.2"
-                       Foreground="LightGray"
-                       Grid.Column="2"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontFamily="Fonts/#Dosis"/>
-
-            <StackPanel Grid.Column="3"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                <StackPanel>
-                    <Button Name="MinButton"
-                    Content="--"
-                    Height="25"
-                    Width="25"
-                    Click="MinButton_Click">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                                <Setter Property="Background" Value="#BD4FF4"/>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </StackPanel>
-
-                <StackPanel>
-                    <Button Name="MaxButton"
-                    Content="[]"
-                    Height="25"
-                    Width="25"
-                    Click="MaxButton_Click">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                                <Setter Property="Background" Value="#BD4FF4"/>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </StackPanel>
-
-                <StackPanel>
-                    <Button Name="CloseButton"
-                    Grid.Column="3"
-                    Content="X"
-                    Height="25"
-                    Width="25"
-                    Click="CloseButton_Click">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                                <Setter Property="Background" Value="#BD4FF4"/>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </StackPanel>
-
-            </StackPanel>
-
-        </Grid>
-
-        <StackPanel Grid.Column="0" Grid.Row="1">
-            <Label x:Name="directoryToScanLabel"
-                   Content="Directory To Scan:"
-                   Foreground="White"
-                   HorizontalAlignment="Left"
-                   Margin="5,0,0,0"/>
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="2">
-            <DockPanel>
-                <Button x:Name="sourceButton"
-                            DockPanel.Dock="Right"
-                            Content="Browse"
-                            Margin="0,0,10,0" Click="sourceButton_Click">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                            <Setter Property="Background" Value="#BD4FF4"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#3DDDC2"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Background" Value="#383660"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>                      
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="18"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="#0F0F2D"
-                                    BorderThickness="1">
-                                <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-                <TextBox x:Name="dirTextBox"
-                             Margin="10,0,1,0"
-                         Background="#7F000000"
-                         Foreground="White"
-                         VerticalAlignment="Center"/>
-            </DockPanel>
-        </StackPanel>
-        
-        <StackPanel Grid.Column="0" Grid.Row="3">
-            <Label x:Name="hashReportDestinationLabel"
-                   Content="Hash Report Destination:"
-                   Foreground="White"
-                   HorizontalAlignment="Left"
-                   Margin="5,0,0,0"/>
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="4">
-            <DockPanel>
-                <Button x:Name="outputButton"
-                        DockPanel.Dock="Right"
-                            Content="Browse"
-                            Margin="0,0,10,0"
-                            HorizontalAlignment="Right" Click="outputButton_Click">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                            <Setter Property="Background" Value="#BD4FF4"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#3DDDC2"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Background" Value="#383660"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="18"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="#0F0F2D"
-                                    BorderThickness="1">
-                                <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-                <TextBox x:Name="outputTextBox"
-                             Margin="10,0,1,0"
-                         Background="#7F000000"
-                         Foreground="White"
-                         VerticalAlignment="Center"/>
-            </DockPanel>
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="5">
-            <Label x:Name="hashModeLabel"
-                   Content="Hash Mode:"
-                   Foreground="White"
-                   HorizontalAlignment="Left"
-                   Margin="5,0,0,0"/>
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="6">
-            
-            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <ComboBox Style="{DynamicResource ComboBoxStyleBlackFrost}" x:Name="hashModeComboBox"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center"
-                              Margin="10,0,0,0"
-                              Foreground="White"
-                              Width="120">
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="ComboBoxItem">
-                                <Setter Property="Background" Value="#3DDDC2"/>
-                                <Setter Property="BorderBrush" Value="#3DDDC2"/>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                        <ComboBoxItem Content="MD5"/>
-                        <ComboBoxItem Content="SHA256"/>
-                    </ComboBox>
+                <DockPanel Grid.ColumnSpan="2">
+                    <Image Width="20" Height="20" HorizontalAlignment="Left" Source="Images/Hashy.png"/>
+
+                    <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
+                </DockPanel>
+
+                <TextBlock Text="PRE-RELEASE ALPHA - v0.0.3" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
+
+                <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <StackPanel>
+                        <Button Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                    <Setter Property="Background" Value="#BD4FF4"/>
+                                </Style>
+                            </Button.Style>
+                            <Path Data="M 0 0 L 9 0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"/>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Button Name="MaxButton" Height="25" Width="25" Click="MaxButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                    <Setter Property="Background" Value="#BD4FF4"/>
+                                </Style>
+                            </Button.Style>
+                            <Path>
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Data" Value="M 0 0 L 0 9 L 9 9 L 9 0 Z M 2 -2 L 11 -2 L 11 7 L 9 7 L 9 0 L 2 0 Z"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                 Value="Maximized">
+                                                <Setter Property="Data" Value="M 0 0 L 0 9 L 9 9 L 9 0 Z Z"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Button Name="CloseButton" Grid.Column="3" Height="25" Width="25" Click="CloseButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                    <Setter Property="Background" Value="#BD4FF4"/>
+                                </Style>
+                            </Button.Style>
+                            <Path Data="M 0 0 L 9 9 M 0 9 L 9 0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"/>
+                        </Button>
+                    </StackPanel>
+
                 </StackPanel>
-                <StackPanel Grid.Column="1"
-                            VerticalAlignment="Center">
-                    <Button x:Name="scanButton"
-                            Content="Scan"
-                            HorizontalAlignment="Right"
-                            Margin="0,0,10,0"
-                            Click="scanButton_Click">
+
+            </Grid>
+
+            <StackPanel Grid.Column="0" Grid.Row="1">
+                <Label x:Name="directoryToScanLabel" Content="Directory To Scan:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="2">
+                <DockPanel>
+                    <Button x:Name="sourceButton" DockPanel.Dock="Right" Content="Browse" Margin="0,0,10,0" Click="sourceButton_Click">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
@@ -270,108 +122,181 @@
                         </Button.Style>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Width="100" Height="18"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                        BorderBrush="#0F0F2D"
-                                        BorderThickness="1">
-                                    <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
+                                <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
+                    <TextBox x:Name="dirTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
+                </DockPanel>
+            </StackPanel>
 
-                </StackPanel>
-            </Grid>
+            <StackPanel Grid.Column="0" Grid.Row="3">
+                <Label x:Name="hashReportDestinationLabel" Content="Hash Report Destination:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="4">
+                <DockPanel>
+                    <Button x:Name="outputButton" DockPanel.Dock="Right" Content="Browse" Margin="0,0,10,0" HorizontalAlignment="Right" Click="outputButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                <Setter Property="Background" Value="#BD4FF4"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#3DDDC2"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#383660"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <TextBox x:Name="outputTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
+                </DockPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="5">
+                <Label x:Name="hashModeLabel" Content="Hash Mode:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="6">
 
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="8">
-            <Button x:Name="clearTerminalButton"
-                    Content="Clear"
-                    HorizontalAlignment="Left"
-                    Margin="10,0,0,0"
-                    Click="clearTerminalButton_Click">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                        <Setter Property="Background" Value="#BD4FF4"/>
-                        <Setter Property="Cursor" Value="Hand"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#3DDDC2"/>
-                            </Trigger>
-                        </Style.Triggers>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <ComboBox Style="{DynamicResource ComboBoxStyleBlackFrost}" x:Name="hashModeComboBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" Width="120">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="#3DDDC2"/>
+                                    <Setter Property="BorderBrush" Value="#3DDDC2"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <ComboBoxItem Content="MD5"/>
+                            <ComboBoxItem Content="SHA256"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <Button x:Name="scanButton" Content="Scan" HorizontalAlignment="Right" Margin="0,0,10,0" Click="scanButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                    <Setter Property="Background" Value="#BD4FF4"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#3DDDC2"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Background" Value="#383660"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="8">
+                <Button x:Name="clearTerminalButton" Content="Clear" HorizontalAlignment="Left" Margin="10,0,0,0" Click="clearTerminalButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                            <Setter Property="Background" Value="#BD4FF4"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#3DDDC2"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+
+            <RichTextBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleRichTextBox" Margin="10,1,10,1" Background="#7F000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" IsReadOnly="True">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text=""/>
+                    </Paragraph>
+                </FlowDocument>
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0" />
                     </Style>
-                </Button.Style>
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="100" Height="18"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="#0F0F2D"
-                                    BorderThickness="1">
-                            <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </StackPanel>
+                </RichTextBox.Resources>
+            </RichTextBox>
 
-        <RichTextBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleRichTextBox"
-                         Margin="10,1,10,1"
-                     Background="#7F000000"
-                             HorizontalAlignment="Stretch"
-                             VerticalAlignment="Stretch"
-                             MinHeight="100"
-                             ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text=""/>
-                </Paragraph>
-            </FlowDocument>
-            <RichTextBox.Resources>
-                <Style TargetType="{x:Type Paragraph}">
-                    <Setter Property="Margin" Value="0" />
-                </Style>
-            </RichTextBox.Resources>
-        </RichTextBox>
+            <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
+                <DockPanel Margin="10,0,0,0">
+                    <Label x:Name="totalPercentageLabel" DockPanel.Dock="Right" VerticalAlignment="Top" Height="25" Content="100%" Foreground="White" Margin="0,0,10,0" HorizontalAlignment="Right"/>
+                    <ProgressBar x:Name="totalProgressBar" Foreground="#9126D4" Height="25" VerticalAlignment="Top"/>
+                </DockPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
-            <DockPanel Margin="10,0,0,0">
-                <Label x:Name="totalPercentageLabel"
-                       DockPanel.Dock="Right"
-                       VerticalAlignment="Top"
-                   Height="25"
-                   Content="100%"
-                   Foreground="White"
-                   Margin="0,0,10,0"
-                   HorizontalAlignment="Right"/>
-                <ProgressBar x:Name="totalProgressBar"
-                         Foreground="#9126D4"
-                         Height="25"
-                         VerticalAlignment="Top"/>
-            </DockPanel>
+            </StackPanel>
 
-        </StackPanel>
-        
-        <StackPanel Grid.Column="1" Grid.Row="1">
-            <Label x:Name="existingReportLabel"
-                   Foreground="White"
-                   Content="Existing Report:"
-                   Margin="5,0,0,0"
-                   HorizontalAlignment="Left"
-                   Width="92"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="2">
-            <DockPanel>
-                <Button x:Name="existingReportButton"
-                        DockPanel.Dock="Right"
-                        Content="Browse"
-                        Margin="0,0,10,0"
-                        HorizontalAlignment="Right"
-                        Click="existingReportButton_Click">
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <Label x:Name="existingReportLabel" Foreground="White" Content="Existing Report:" Margin="5,0,0,0" HorizontalAlignment="Left" Width="92"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="2">
+                <DockPanel>
+                    <Button x:Name="existingReportButton" DockPanel.Dock="Right" Content="Browse" Margin="0,0,10,0" HorizontalAlignment="Right" Click="existingReportButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                <Setter Property="Background" Value="#BD4FF4"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#3DDDC2"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#383660"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <TextBox x:Name="reportTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
+                </DockPanel>
+
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="4">
+                <Button x:Name="checkButton" Content="Check" HorizontalAlignment="Right" Margin="0,0,10,0" Click="checkButton_Click">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
@@ -389,119 +314,38 @@
                     </Button.Style>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="18"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="#0F0F2D"
-                                    BorderThickness="1">
-                                <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
+                            <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <TextBox x:Name="reportTextBox"
-                     Margin="10,0,1,0"
-                         Background="#7F000000"
-                         Foreground="White"
-                         VerticalAlignment="Center"/>
-            </DockPanel>
-
-        </StackPanel>
-
-        <StackPanel Grid.Column="1" Grid.Row="4">
-            <Button x:Name="checkButton"
-                    Content="Check"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,10,0"
-                    Click="checkButton_Click">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                        <Setter Property="Background" Value="#BD4FF4"/>
-                        <Setter Property="Cursor" Value="Hand"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#3DDDC2"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="#383660"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="100" Height="18"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="#0F0F2D"
-                                    BorderThickness="1">
-                            <ContentPresenter VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </StackPanel>
-
-        <StackPanel Grid.Column="1" Grid.Row="6">
-            <Button x:Name="debugButton"
-                    Content="DEBUG!"
-                    Margin="0,0,10,0"
-                    Height="20"
-                    HorizontalAlignment="Right"
-                    Width="152"
-                    Click="debugButton_Click"/>
-        </StackPanel>
-
-        <Grid Grid.Column="1"
-              Grid.RowSpan="2"
-              Margin="160, -410, -620, 85"
-              Panel.ZIndex="-1">
-            <Grid.RenderTransform>
-                <RotateTransform Angle="50"/>
-            </Grid.RenderTransform>
-
-            <StackPanel Orientation="Horizontal"
-                        Margin="-350, 250, -255, -250">
-                <StackPanel>
-                    <Border Width="700"
-                            Height="35"
-                            Background="#3DDDC2"
-                            Margin="150,0,0,0"
-                            CornerRadius="20"/>
-                    <Border Width="700"
-                            Height="35"
-                            Background="#BD4FF4"
-                            Margin="0,15,0,0"
-                            CornerRadius="20"/>
-                    <Border Width="700"
-                            Height="35"
-                            Background="#383660"
-                            Margin="75,15,0,0"
-                            CornerRadius="20"/>
-                </StackPanel>
-
-                <StackPanel>
-                    <Border Width="2000"
-                            Height="35"
-                            Background="#3DDDC2"
-                            Margin="150,0,0,0"
-                            CornerRadius="20"/>
-                    <Border Width="2000"
-                            Height="35"
-                            Background="#BD4FF4"
-                            Margin="0,15,0,0"
-                            CornerRadius="20"/>
-                    <Border Width="2000"
-                            Height="35"
-                            Background="#383660"
-                            Margin="75,15,0,0"
-                            CornerRadius="20"/>
-                </StackPanel>
             </StackPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="6">
+                <Button x:Name="debugButton" Content="DEBUG!" Visibility="Visible" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
+            </StackPanel>
+
+            <Grid Grid.Column="1" Grid.RowSpan="2" Margin="160, -410, -620, 85" Panel.ZIndex="-1">
+                <Grid.RenderTransform>
+                    <RotateTransform Angle="50"/>
+                </Grid.RenderTransform>
+
+                <StackPanel Orientation="Horizontal" Margin="-350, 250, -255, -250">
+                    <StackPanel>
+                        <Border Width="700" Height="35" Background="#3DDDC2" Margin="150,0,0,0" CornerRadius="20"/>
+                        <Border Width="700" Height="35" Background="#BD4FF4" Margin="0,15,0,0" CornerRadius="20"/>
+                        <Border Width="700" Height="35" Background="#383660" Margin="75,15,0,0" CornerRadius="20"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Border Width="2000" Height="35" Background="#3DDDC2" Margin="150,0,0,0" CornerRadius="20"/>
+                        <Border Width="2000" Height="35" Background="#BD4FF4" Margin="0,15,0,0" CornerRadius="20"/>
+                        <Border Width="2000" Height="35" Background="#383660" Margin="75,15,0,0" CornerRadius="20"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
         </Grid>
-        
-    </Grid>
+    </Border>
 </Window>
