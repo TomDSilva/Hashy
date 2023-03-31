@@ -193,7 +193,7 @@ namespace Hashy
 
             int i = 1;
 
-            bool error = false;
+            int error = 0;
 
             // Loop through all the files:
             foreach (var file in files)
@@ -211,6 +211,8 @@ namespace Hashy
                     }
                     catch (FileNotFoundException)
                     {
+                        error = error + 1;
+
                         MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         SetProgressBar(totalProgressBar, i);
@@ -226,6 +228,8 @@ namespace Hashy
                     }
                     catch (Exception e)
                     {
+                        error = error + 1;
+
                         MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         SetProgressBar(totalProgressBar, i);
@@ -247,8 +251,9 @@ namespace Hashy
                 }
                 else
                 {
-                    value = "!!!ERROR!!!";
-                    error = true;
+                    error = error + 1;
+
+                    continue;
                 }
 
                 // Add the value output to the fileDetails list along with the current file:
@@ -281,9 +286,9 @@ namespace Hashy
 
             AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
 
-            if (error)
+            if (error > 0)
             {
-                AppendLine(consoleRichTextBox, "Warning! There was an error", Brushes.Red);
+                AppendLine(consoleRichTextBox, $"Warning! There were {error} errors", Brushes.Red);
             }
 
             hashMode = "";
