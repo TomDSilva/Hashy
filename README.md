@@ -3,6 +3,7 @@
 Hashy is a .NET 6 WPF Windows application used to detect silent file corruption.
 It does this via the creation of a "scan" report initially, and then the user at a later date can use the inbuilt "check" function to compare the report's hash data to current files.
 
+## Scan Mode
 The current design of the UI features on the left side of Hashy a ability to run an initial scan.
 User's have the option to select hash mode (MD5 as default, but also the option for SHA256).
 An initial scan will generate a CSV at the user's chosen location containing:
@@ -16,6 +17,7 @@ An initial scan will generate a CSV at the user's chosen location containing:
 - Hash.
 - Last modified.
 
+## Check Mode
 The right side of Hashy has a checking option which a user can use to compare a pre-existing report that they have created via Hashy (see initial scan above) with the current files.
 Hashy makes sure to compare modified timestamps of the file to determine if the file has been user modified (as this would also have a different hash).
 Any inconsistencies are output to the console window in red for the user to review.
