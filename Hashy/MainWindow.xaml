@@ -43,11 +43,15 @@
 
                 <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
                     <StackPanel>
-                        <Button Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
+                        <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
                                     <Setter Property="Background" Value="#BD4FF4"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#3DDDC2"/>
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
                             </Button.Style>
                             <Path Data="M 0 0 L 9 0" VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -56,10 +60,9 @@
                     </StackPanel>
 
                     <StackPanel>
-                        <Button Name="MaxButton" Height="25" Width="25" Click="MaxButton_Click">
+                        <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MaxButton" Height="25" Width="25" Click="MaxButton_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
                                     <Setter Property="Background" Value="#BD4FF4"/>
                                 </Style>
                             </Button.Style>
@@ -83,10 +86,9 @@
                     </StackPanel>
 
                     <StackPanel>
-                        <Button Name="CloseButton" Grid.Column="3" Height="25" Width="25" Click="CloseButton_Click">
+                        <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="CloseButton" Grid.Column="3" Height="25" Width="25" Click="CloseButton_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
                                     <Setter Property="Background" Value="#BD4FF4"/>
                                 </Style>
                             </Button.Style>
