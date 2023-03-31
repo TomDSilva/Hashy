@@ -136,7 +136,7 @@ namespace Hashy
             string scanRoot = GetTBText(dirTextBox);
             string reportDest = GetTBText(outputTextBox);
 
-            AppendLine(consoleRichTextBox, "------------------------------------------------------------");
+            AppendLine(consoleRichTextBox, "---------------------------------Scan Started---------------------------------");
 
             if (File.Exists(reportDest))
             {
@@ -318,6 +318,8 @@ namespace Hashy
             // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
             AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
 
+            AppendLine(consoleRichTextBox, "---------------------------------Scan Finished---------------------------------");
+
             hashMode = "";
 
             outputFile.Close();
@@ -339,7 +341,7 @@ namespace Hashy
             // Create a list of files from the existing report via a method:
             List<FileDetails> report = GetFileContents(reportLocation);
 
-            AppendLine(consoleRichTextBox, "------------------------------------------------------------");
+            AppendLine(consoleRichTextBox, "---------------------------------Check Started---------------------------------");
             AppendLine(consoleRichTextBox, "Checking files against existing report:");
             AppendLine(consoleRichTextBox, reportLocation);
 
@@ -465,7 +467,6 @@ namespace Hashy
                         else
                         {
                             AppendLine(consoleRichTextBox, "---No corruption detected---", Brushes.Green);
-                            AppendLine(consoleRichTextBox, "---------------------------------Check Finished---------------------------------");
                         }
                     }
                     i = i + 1;
@@ -483,10 +484,12 @@ namespace Hashy
 
                 // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
                 AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
+                AppendLine(consoleRichTextBox, "---------------------------------Check Finished---------------------------------");
             }
             else
             {
                 AppendLine(consoleRichTextBox, "!!!ERROR!!! Report file failed UID check", Brushes.Red);
+                AppendLine(consoleRichTextBox, "---------------------------------Check ABORTED---------------------------------");
             }
 
             // Enable UI:
