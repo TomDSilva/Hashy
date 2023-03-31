@@ -1,7 +1,8 @@
 # Hashy
 
 Hashy is a .NET 6 WPF Windows application used to detect silent file corruption.
-It does this via the creation of a "scan" report initially, and then the user at a later date can use the inbuilt "check" function to compare the report's hash data to current files.
+It does this via it's 2 modes: "Scan Mode" and "Check Mode".
+That is the creation of a "scan" report initially, and then the user at a later date can use the inbuilt "check" mode to compare the report's hash data to current files.
 
 ## Scan Mode
 The current design of the UI features on the left side of Hashy a ability to run an initial scan.
