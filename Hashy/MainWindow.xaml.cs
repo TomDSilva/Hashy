@@ -246,8 +246,45 @@ namespace Hashy
                 }
                 else if (hashMode == "SHA256")
                 {
-                    // Fill value with the output from the SHA256 file calculation:
-                    value = CalculateSHA256(file);
+                    try
+                    {
+                        // Fill value with the output from the SHA256 file calculation:
+                        value = CalculateSHA256(file);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        error = error + 1;
+
+                        MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                        SetProgressBar(totalProgressBar, i);
+                        string f = 100 / files.Count * i + "%";
+                        SetPercentageLabel(totalPercentageLabel, f);
+                        if (i == files.Count)
+                        {
+                            SetPercentageLabel(totalPercentageLabel, "100%");
+                        }
+                        i = i + 1;
+
+                        continue;
+                    }
+                    catch (Exception e)
+                    {
+                        error = error + 1;
+
+                        MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                        SetProgressBar(totalProgressBar, i);
+                        string f = 100 / files.Count * i + "%";
+                        SetPercentageLabel(totalPercentageLabel, f);
+                        if (i == files.Count)
+                        {
+                            SetPercentageLabel(totalPercentageLabel, "100%");
+                        }
+                        i = i + 1;
+
+                        continue;
+                    }
                 }
                 else
                 {
