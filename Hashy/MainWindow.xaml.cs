@@ -8,8 +8,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using static System.Windows.Forms.AxHost;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
+using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
@@ -123,21 +125,6 @@ namespace Hashy
 
         private void consoleRichTextBox_TextChanged(object sender, EventArgs e)
         {
-            //// set the current caret position to the end
-            //consoleRichTextBox.SelectionStart = consoleRichTextBox.Text.Length;
-
-            //TextPointer text = consoleRichTextBox.Document.ContentStart;
-            //while (text.GetPointerContext(LogicalDirection.Forward) != TextPointerContext.Text)
-            //{
-            //    text = text.GetNextContextPosition(LogicalDirection.Forward);
-            //}
-            //TextPointer startPos = text.GetPositionAtOffset(0);
-            //TextPointer endPos = text.GetPositionAtOffset(10);
-            //consoleRichTextBox.Selection.Select(startPos, endPos);
-
-            //// scroll it automatically
-            //consoleRichTextBox.ScrollToCaret();
-
             consoleRichTextBox.ScrollToEnd();
         }
 
@@ -214,6 +201,7 @@ namespace Hashy
                         error = error + 1;
 
                         MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                        AppendLine(consoleRichTextBox, "ERROR - File not found", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / files.Count * i + "%";
@@ -231,6 +219,9 @@ namespace Hashy
                         error = error + 1;
 
                         MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
+                        AppendLine(consoleRichTextBox, "ERROR - An unknown error occured", Brushes.Red);
+                        AppendLine(consoleRichTextBox, "The error message was:", Brushes.Red);
+                        AppendLine(consoleRichTextBox, $"{e}", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / files.Count * i + "%";
@@ -313,20 +304,19 @@ namespace Hashy
             // Clear the files list:
             files.Clear();
 
+            if (error > 0)
+            {
+                AppendLine(consoleRichTextBox, $"Warning! There were {error} errors", Brushes.Red);
+            }
+
             DateTime finished = DateTime.Now;
 
             AppendLine(consoleRichTextBox, $"Scan finished at {finished}");
 
             var scanDuration = finished - started;
+
             // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
-            // Update the console with how long the scan took. Formatting to remove decimal places.
-
             AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
-
-            if (error > 0)
-            {
-                AppendLine(consoleRichTextBox, $"Warning! There were {error} errors", Brushes.Red);
-            }
 
             hashMode = "";
 
@@ -340,6 +330,9 @@ namespace Hashy
         {
             // Disable UI:
             DisableUI();
+
+            // Variable to hold when we started the scan:
+            DateTime started = DateTime.Now;
 
             string reportLocation = GetTextBoxText(reportTextBox);
 
@@ -370,6 +363,8 @@ namespace Hashy
 
                 AppendLine(consoleRichTextBox, $"Report hash mode is {reportHashMode}");
 
+                int error = 0;
+
                 foreach (FileDetails file in report)
                 {
                     if (file.Hash == "!!!ERROR!!!")
@@ -387,7 +382,50 @@ namespace Hashy
 
                     if (reportHashMode == "MD5")
                     {
-                        hash = CalculateMD5(file.FilePath);
+                        try
+                        {
+                            hash = CalculateMD5(file.FilePath);
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            error = error + 1;
+
+                            MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
+                            AppendLine(consoleRichTextBox, "ERROR - File not found", Brushes.Red);
+
+                            SetProgressBar(totalProgressBar, i);
+                            string f = 100 / report.Count * i + "%";
+                            SetPercentageLabel(totalPercentageLabel, f);
+                            if (i == report.Count)
+                            {
+                                SetPercentageLabel(totalPercentageLabel, "100%");
+                            }
+
+                            i = i + 1;
+
+                            continue;
+                        }
+                        catch (Exception e)
+                        {
+                            error = error + 1;
+
+                            MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
+                            AppendLine(consoleRichTextBox, "ERROR - An unknown error occured", Brushes.Red);
+                            AppendLine(consoleRichTextBox, "The error message was:", Brushes.Red);
+                            AppendLine(consoleRichTextBox, $"{e}", Brushes.Red);
+
+                            SetProgressBar(totalProgressBar, i);
+                            string f = 100 / report.Count * i + "%";
+                            SetPercentageLabel(totalPercentageLabel, f);
+                            if (i == report.Count)
+                            {
+                                SetPercentageLabel(totalPercentageLabel, "100%");
+                            }
+
+                            i = i + 1;
+
+                            continue;
+                        }
                     }
                     else if (reportHashMode == "SHA256")
                     {
@@ -432,6 +470,19 @@ namespace Hashy
                     }
                     i = i + 1;
                 }
+                if (error > 0)
+                {
+                    AppendLine(consoleRichTextBox, $"Warning! There were {error} errors", Brushes.Red);
+                }
+
+                DateTime finished = DateTime.Now;
+
+                AppendLine(consoleRichTextBox, $"Scan finished at {finished}");
+
+                var scanDuration = finished - started;
+
+                // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
+                AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
             }
             else
             {
@@ -562,27 +613,6 @@ namespace Hashy
         {
             writer.Close();
         }
-
-        //static string CalculateMD5(string filename)
-        //{
-        //    using (var md5 = MD5.Create())
-        //    {
-        //        try
-        //        {
-        //            using (var stream = File.OpenRead(filename))
-        //            {
-        //                var hash = md5.ComputeHash(stream);
-        //                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-        //            }
-        //        }
-        //        catch
-        //        {
-        //            MessageBox.Show($"ERROR - Unable to read file:\n{filename}");
-        //            return "";
-        //        }
-
-        //    }
-        //}
 
         static string CalculateMD5(string filename)
         {
