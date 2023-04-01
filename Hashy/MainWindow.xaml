@@ -34,7 +34,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.ColumnSpan="2">
-                    <Image Width="20" Height="20" HorizontalAlignment="Left" Source="Images/Hashy.png"/>
+                    <Image Width="20" Height="20" HorizontalAlignment="Left" Source="/Images/Hashy.png"/>
 
                     <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
                 </DockPanel>
@@ -182,6 +182,13 @@
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="Background" Value="#3DDDC2"/>
                                     <Setter Property="BorderBrush" Value="#3DDDC2"/>
+
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Red"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                             <ComboBoxItem Content="MD5"/>
@@ -325,7 +332,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Grid.Row="6">
-                <Button x:Name="debugButton" Content="DEBUG!" Visibility="Visible" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
+                <Button x:Name="debugButton" Content="DEBUG!" Visibility="Hidden" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
             </StackPanel>
 
             <Grid Grid.Column="1" Grid.RowSpan="2" Margin="160, -410, -620, 85" Panel.ZIndex="-1">

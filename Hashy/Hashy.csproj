@@ -10,14 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Hashy.png" />
     <None Remove="Images\Hashy.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="icons8-hashtag-48.ico" />
-    <Content Include="Images\Hashy.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Images\Hashy.png" />
   </ItemGroup>
 
   <ItemGroup>
