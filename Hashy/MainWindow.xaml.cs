@@ -15,11 +15,10 @@ using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
-// TODO : Investigate: when app is fullscreen it goes over edges.
 // TODO : Check file for error tag.
 // TODO : About page? Add Github, Linkedin?
 // TODO : Investigate nullable properties.
-// TODO : Change hover over color of window buttons.
+// TODO : Make if so that when app is fullscreen you can single click and drag the window.
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit

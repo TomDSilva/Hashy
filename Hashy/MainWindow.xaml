@@ -6,6 +6,16 @@
     xmlns:local="clr-namespace:Hashy" mc:Ignorable="d" Title="Hashy" Height="450" Width="800" WindowStyle="None" Background="#181735" MinHeight="300" MinWidth="600" AllowsTransparency="True">
     <Border>
         <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" 
+             Value="Maximized">
+                            <Setter Property="Margin" Value="5"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="20"/>
