@@ -179,16 +179,24 @@
                     <StackPanel Grid.Column="0">
                         <ComboBox Style="{DynamicResource ComboBoxStyleBlackFrost}" x:Name="hashModeComboBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" Width="120">
                             <ComboBox.ItemContainerStyle>
-                                <Style TargetType="ComboBoxItem">
-                                    <Setter Property="Background" Value="#3DDDC2"/>
-                                    <Setter Property="BorderBrush" Value="#3DDDC2"/>
-
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="Red"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                    
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                                                <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="False">
+                                                        <Setter TargetName="Border" Property="Background" Value="Black" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="#3DDDC2" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                             <ComboBoxItem Content="MD5"/>
