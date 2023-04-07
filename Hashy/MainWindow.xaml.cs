@@ -8,17 +8,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using static System.Windows.Forms.AxHost;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-
-// TODO : Check file for error tag.
-// TODO : About page? Add Github, Linkedin?
-// TODO : Investigate nullable properties.
-// TODO : Make if so that when app is fullscreen you can single click and drag the window.
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -514,7 +508,7 @@ namespace Hashy
 
         private void SetScanButtonStatus()
         {
-            if (Directory.Exists(GetTBText(dirTextBox)) && File.Exists(GetTBText(outputTextBox)))
+            if (Directory.Exists(GetTBText(dirTextBox)))
             {
                 EnableButton(scanButton);
             }
