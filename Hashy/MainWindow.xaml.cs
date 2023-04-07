@@ -173,6 +173,8 @@ namespace Hashy
 
             int i = 1;
 
+            int total = files.Count;
+
             int error = 0;
 
             // Loop through all the files:
@@ -180,7 +182,7 @@ namespace Hashy
             {
                 string value;
 
-                AppendLine(consoleRichTextBox, $"Checking {file}");
+                AppendLine(consoleRichTextBox, $"{i} of {total} - Checking {file}");
 
                 if (hashMode == "MD5")
                 {
