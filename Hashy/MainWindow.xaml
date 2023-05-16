@@ -266,19 +266,13 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-
-            <RichTextBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleRichTextBox" Margin="10,1,10,1" Background="#7F000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" IsReadOnly="True">
-                <FlowDocument>
-                    <Paragraph>
-                        <Run Text=""/>
-                    </Paragraph>
-                </FlowDocument>
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0" />
-                    </Style>
-                </RichTextBox.Resources>
-            </RichTextBox>
+            <ListBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleListBox" Margin="10,1,10,1" Background="#7F000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Message}" Foreground="{Binding Color}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
             <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
                 <DockPanel Margin="10,0,0,0">
@@ -350,7 +344,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Grid.Row="6">
-                <Button x:Name="debugButton" Content="DEBUG!" Visibility="Hidden" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
+                <Button x:Name="debugButton" Content="DEBUG!" Visibility="Visible" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
             </StackPanel>
 
             <Grid Grid.Column="1" Grid.RowSpan="2" Margin="160, -410, -620, 85" Panel.ZIndex="-1">

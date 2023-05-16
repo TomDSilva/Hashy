@@ -1,12 +1,12 @@
 ﻿using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
@@ -26,6 +26,7 @@ namespace Hashy
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ObservableCollection<ConsoleMessage> consoleMessages;
         private string? hashMode;
         public MainWindow()
         {
@@ -36,14 +37,27 @@ namespace Hashy
             outputTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
             reportTextBox.Text = "C:\\Hashy Test Folder\\output.csv";
 
-            consoleRichTextBox.Document.Blocks.Clear();
-
             // Set the default hash mode to 0 (being MD5):
             hashModeComboBox.SelectedIndex = 0;
 
             SetScanButtonStatus();
             SetCheckButtonStatus();
             SetClearButtonStatus();
+
+            consoleMessages = new ObservableCollection<ConsoleMessage>();
+            consoleListBox.ItemsSource = consoleMessages;
+        }
+
+        public class ConsoleMessage
+        {
+            public string Message { get; set; }
+            public Brush Color { get; set; }
+
+            public ConsoleMessage(string message, Brush color)
+            {
+                Message = message;
+                Color = color;
+            }
         }
 
         // TEST debug button not meant for production version:
@@ -51,8 +65,6 @@ namespace Hashy
         {
             //var about = new About();
             //about.Show();
-            //EnableButton(scanButton);
-            //AppendLine(consoleRichTextBox, "Set scanbutton to enabled");
             Console.ReadLine();
         }
 
@@ -113,12 +125,8 @@ namespace Hashy
 
         private void clearTerminalButton_Click(object sender, EventArgs e)
         {
-            consoleRichTextBox.Document.Blocks.Clear();
-        }
-
-        private void consoleRichTextBox_TextChanged(object sender, EventArgs e)
-        {
-            consoleRichTextBox.ScrollToEnd();
+            consoleMessages.Clear();
+            SetClearButtonStatus();
         }
 
         private void InitialScan()
@@ -129,7 +137,7 @@ namespace Hashy
             string scanRoot = GetTBText(dirTextBox);
             string reportDest = GetTBText(outputTextBox);
 
-            AppendLine(consoleRichTextBox, "---------------------------------Scan Started---------------------------------");
+            AppendLine(consoleListBox, "---------------------------------Scan Started---------------------------------");
 
             if (File.Exists(reportDest))
             {
@@ -137,7 +145,7 @@ namespace Hashy
 
                 if (result == MessageBoxResult.No)
                 {
-                    AppendLine(consoleRichTextBox, "!!!SCAN ABORTED!!!", Brushes.Red);
+                    AppendLine(consoleListBox, "!!!SCAN ABORTED!!!", Brushes.Red);
 
                     // Enable UI:
                     EnableUI();
@@ -149,9 +157,9 @@ namespace Hashy
             // Variable to hold when we started the scan:
             DateTime started = DateTime.Now;
 
-            AppendLine(consoleRichTextBox, $"Scan started at {started}");
-            AppendLine(consoleRichTextBox, "Report will be saved here:");
-            AppendLine(consoleRichTextBox, reportDest);
+            AppendLine(consoleListBox, $"Scan started at {started}");
+            AppendLine(consoleListBox, "Report will be saved here:");
+            AppendLine(consoleListBox, reportDest);
 
             // Create a list called files that will hold the output from the recursive file processor:
             List<string> files = RecursiveFileProcessor.RecursiveFileSearch(GetTBText(dirTextBox));
@@ -182,7 +190,7 @@ namespace Hashy
             {
                 string value;
 
-                AppendLine(consoleRichTextBox, $"{i} of {total} - Checking {file}");
+                AppendLine(consoleListBox, $"{i} of {total} - Checking {file}");
 
                 if (hashMode == "MD5")
                 {
@@ -196,7 +204,7 @@ namespace Hashy
                         error = error + 1;
 
                         MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
-                        AppendLine(consoleRichTextBox, "ERROR - File not found", Brushes.Red);
+                        AppendLine(consoleListBox, "ERROR - File not found", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / files.Count * i + "%";
@@ -214,9 +222,9 @@ namespace Hashy
                         error = error + 1;
 
                         MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
-                        AppendLine(consoleRichTextBox, "ERROR - An unknown error occured", Brushes.Red);
-                        AppendLine(consoleRichTextBox, "The error message was:", Brushes.Red);
-                        AppendLine(consoleRichTextBox, $"{e}", Brushes.Red);
+                        AppendLine(consoleListBox, "ERROR - An unknown error occured", Brushes.Red);
+                        AppendLine(consoleListBox, "The error message was:", Brushes.Red);
+                        AppendLine(consoleListBox, $"{e}", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / files.Count * i + "%";
@@ -301,19 +309,19 @@ namespace Hashy
 
             if (error > 0)
             {
-                AppendLine(consoleRichTextBox, $"Warning! There were {error} errors", Brushes.Red);
+                AppendLine(consoleListBox, $"Warning! There were {error} errors", Brushes.Red);
             }
 
             DateTime finished = DateTime.Now;
 
-            AppendLine(consoleRichTextBox, $"Scan finished at {finished}");
+            AppendLine(consoleListBox, $"Scan finished at {finished}");
 
             var scanDuration = finished - started;
 
             // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
-            AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
+            AppendLine(consoleListBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
 
-            AppendLine(consoleRichTextBox, "---------------------------------Scan Finished---------------------------------");
+            AppendLine(consoleListBox, "---------------------------------Scan Finished---------------------------------");
 
             hashMode = "";
 
@@ -336,13 +344,13 @@ namespace Hashy
             // Create a list of files from the existing report via a method:
             List<FileDetails> report = GetFileContents(reportLocation);
 
-            AppendLine(consoleRichTextBox, "---------------------------------Check Started---------------------------------");
-            AppendLine(consoleRichTextBox, "Checking files against existing report:");
-            AppendLine(consoleRichTextBox, reportLocation);
+            AppendLine(consoleListBox, "---------------------------------Check Started---------------------------------");
+            AppendLine(consoleListBox, "Checking files against existing report:");
+            AppendLine(consoleListBox, reportLocation);
 
             if (UIDCheck(reportLocation))
             {
-                AppendLine(consoleRichTextBox, "Report file passed UID check", Brushes.Green);
+                AppendLine(consoleListBox, "Report file passed UID check", Brushes.Green);
 
                 // Set totalProgressBar back to 0 (in case previously run):
                 SetProgressBar(totalProgressBar, 0);
@@ -358,7 +366,7 @@ namespace Hashy
 
                 string reportHashMode = HashMode(reportLocation);
 
-                AppendLine(consoleRichTextBox, $"Report hash mode is {reportHashMode}");
+                AppendLine(consoleListBox, $"Report hash mode is {reportHashMode}");
 
                 int error = 0;
 
@@ -375,7 +383,7 @@ namespace Hashy
 
                     string hash = "";
 
-                    AppendLine(consoleRichTextBox, $"Checking {file.FilePath}...");
+                    AppendLine(consoleListBox, $"Checking {file.FilePath}...");
 
                     if (reportHashMode == "MD5")
                     {
@@ -388,7 +396,7 @@ namespace Hashy
                             error = error + 1;
 
                             MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
-                            AppendLine(consoleRichTextBox, "ERROR - File not found", Brushes.Red);
+                            AppendLine(consoleListBox, "ERROR - File not found", Brushes.Red);
 
                             SetProgressBar(totalProgressBar, i);
                             string f = 100 / report.Count * i + "%";
@@ -407,9 +415,9 @@ namespace Hashy
                             error = error + 1;
 
                             MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
-                            AppendLine(consoleRichTextBox, "ERROR - An unknown error occured", Brushes.Red);
-                            AppendLine(consoleRichTextBox, "The error message was:", Brushes.Red);
-                            AppendLine(consoleRichTextBox, $"{e}", Brushes.Red);
+                            AppendLine(consoleListBox, "ERROR - An unknown error occured", Brushes.Red);
+                            AppendLine(consoleListBox, "The error message was:", Brushes.Red);
+                            AppendLine(consoleListBox, $"{e}", Brushes.Red);
 
                             SetProgressBar(totalProgressBar, i);
                             string f = 100 / report.Count * i + "%";
@@ -433,20 +441,20 @@ namespace Hashy
 
                     if (file.Hash == hash & DateTimeSecondsEquals(file.LastModified, lastModified))
                     {
-                        AppendLine(consoleRichTextBox, "Good", Brushes.Green);
+                        AppendLine(consoleListBox, "Good", Brushes.Green);
                     }
                     else if (file.Hash != hash & DateTimeSecondsEquals(file.LastModified, lastModified))
                     {
                         corruptFile = true;
-                        AppendLine(consoleRichTextBox, "!!!BAD!!!", Brushes.Red);
+                        AppendLine(consoleListBox, "!!!BAD!!!", Brushes.Red);
                     }
                     else if (file.Hash != hash & !(DateTimeSecondsEquals(file.LastModified, lastModified)))
                     {
-                        AppendLine(consoleRichTextBox, "!!!FILE HAS BEEN USER MODIFIED!!!", Brushes.Orange);
+                        AppendLine(consoleListBox, "!!!FILE HAS BEEN USER MODIFIED!!!", Brushes.Orange);
                     }
                     else
                     {
-                        AppendLine(consoleRichTextBox, "!!!ERROR!!!", Brushes.Red);
+                        AppendLine(consoleListBox, "!!!ERROR!!!", Brushes.Red);
                     }
                     SetProgressBar(totalProgressBar, i);
                     string d = 100 / report.Count * i + "%";
@@ -457,34 +465,34 @@ namespace Hashy
 
                         if (corruptFile)
                         {
-                            AppendLine(consoleRichTextBox, "THERE WAS CORRUPTION DETECTED", Brushes.Red);
+                            AppendLine(consoleListBox, "THERE WAS CORRUPTION DETECTED", Brushes.Red);
                         }
                         else
                         {
-                            AppendLine(consoleRichTextBox, "---No corruption detected---", Brushes.Green);
+                            AppendLine(consoleListBox, "---No corruption detected---", Brushes.Green);
                         }
                     }
                     i = i + 1;
                 }
                 if (error > 0)
                 {
-                    AppendLine(consoleRichTextBox, $"Warning! There were {error} errors", Brushes.Red);
+                    AppendLine(consoleListBox, $"Warning! There were {error} errors", Brushes.Red);
                 }
 
                 DateTime finished = DateTime.Now;
 
-                AppendLine(consoleRichTextBox, $"Scan finished at {finished}");
+                AppendLine(consoleListBox, $"Scan finished at {finished}");
 
                 var scanDuration = finished - started;
 
                 // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
-                AppendLine(consoleRichTextBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
-                AppendLine(consoleRichTextBox, "---------------------------------Check Finished---------------------------------");
+                AppendLine(consoleListBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
+                AppendLine(consoleListBox, "---------------------------------Check Finished---------------------------------");
             }
             else
             {
-                AppendLine(consoleRichTextBox, "!!!ERROR!!! Report file failed UID check", Brushes.Red);
-                AppendLine(consoleRichTextBox, "---------------------------------Check ABORTED---------------------------------");
+                AppendLine(consoleListBox, "!!!ERROR!!! Report file failed UID check", Brushes.Red);
+                AppendLine(consoleListBox, "---------------------------------Check ABORTED---------------------------------");
             }
 
             // Enable UI:
@@ -534,7 +542,7 @@ namespace Hashy
 
         private void SetClearButtonStatus()
         {
-            if (GetRTBVO(consoleRichTextBox) == 0)
+            if (consoleListBox.Items.Count == 0)
             {
                 DisableButton(clearTerminalButton);
             }
@@ -770,43 +778,39 @@ namespace Hashy
             }
         }
 
-        private void AppendLine(System.Windows.Controls.RichTextBox rtb, string text)
+        private void AppendLine(System.Windows.Controls.ListBox lb, string text)
         {
-            if (rtb.Dispatcher.CheckAccess())
+            if (lb.Dispatcher.CheckAccess())
             {
-                TextRange rangeOfText = new TextRange(rtb.Document.ContentEnd, rtb.Document.ContentEnd);
-                rangeOfText.Text = text;
-                rangeOfText.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
-                rtb.AppendText(Environment.NewLine);
-                rtb.ScrollToEnd();
+                var message = new ConsoleMessage(text, Brushes.White);
+                consoleMessages.Add(message);
+                consoleListBox.ScrollIntoView(message);
+
                 SetClearButtonStatus();
             }
             else
             {
-                rtb.Dispatcher.Invoke(delegate
+                lb.Dispatcher.Invoke(delegate
                 {
-                    AppendLine(rtb, text);
+                    AppendLine(lb, text);
                     SetClearButtonStatus();
                 });
             }
         }
 
-        private void AppendLine(System.Windows.Controls.RichTextBox rtb, string text, Brush color)
+        private void AppendLine(System.Windows.Controls.ListBox lb, string text, Brush color)
         {
-            if (rtb.Dispatcher.CheckAccess())
+            if (lb.Dispatcher.CheckAccess())
             {
-                TextRange rangeOfText = new TextRange(rtb.Document.ContentEnd, rtb.Document.ContentEnd);
-                rangeOfText.Text = text;
-                rangeOfText.ApplyPropertyValue(TextElement.ForegroundProperty, color);
-
-                rtb.AppendText(Environment.NewLine);
-                rtb.ScrollToEnd();
+                var message = new ConsoleMessage(text, color);
+                consoleMessages.Add(message);
+                consoleListBox.ScrollIntoView(message);
             }
             else
             {
-                rtb.Dispatcher.Invoke(delegate
+                lb.Dispatcher.Invoke(delegate
                 {
-                    AppendLine(rtb, text, color);
+                    AppendLine(lb, text, color);
                 });
             }
         }
@@ -871,24 +875,6 @@ namespace Hashy
                 });
 
                 return tbText;
-            }
-        }
-
-        private double GetRTBVO(System.Windows.Controls.RichTextBox rtb)
-        {
-            if (rtb.Dispatcher.CheckAccess())
-            {
-                return rtb.VerticalOffset;
-            }
-            else
-            {
-                double rtbVO = 0;
-                rtb.Dispatcher.Invoke(delegate
-                {
-                    rtbVO = rtb.VerticalOffset;
-                });
-
-                return rtbVO;
             }
         }
 
