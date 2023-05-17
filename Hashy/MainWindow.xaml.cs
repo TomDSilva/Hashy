@@ -7,16 +7,12 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.ComponentModel;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using System.Drawing;
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -174,6 +170,8 @@ namespace Hashy
             // Set totalProgressBar back to 0 (in case previously run):
             SetProgressBar(totalProgressBar, 0);
 
+            UnhideLabel(totalPercentageLabel);
+
             SetPercentageLabel(totalPercentageLabel, "0%");
 
             // Set totalProgressBar max value to the total of the files we are going to loop through:
@@ -212,7 +210,7 @@ namespace Hashy
                         AppendLine(consoleListBox, "ERROR - File not found", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
+                        string f = 100 / total * i + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
                         if (i == total)
                         {
@@ -232,7 +230,7 @@ namespace Hashy
                         AppendLine(consoleListBox, $"{e}", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
+                        string f = 100 / total * i + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
                         if (i == total)
                         {
@@ -257,7 +255,7 @@ namespace Hashy
                         MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
+                        string f = 100 / total * i + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
                         if (i == total)
                         {
@@ -274,7 +272,7 @@ namespace Hashy
                         MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
+                        string f = 100 / total * i + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
                         if (i == total)
                         {
@@ -706,6 +704,31 @@ namespace Hashy
 
             // Enable all combobox's:
             EnableComboBox(hashModeComboBox);
+        }
+
+        private void HideLabel(System.Windows.Controls.Label lbl)
+        {
+            SetLabelVisibility(lbl, System.Windows.Visibility.Hidden);
+        }
+
+        private void UnhideLabel(System.Windows.Controls.Label lbl)
+        {
+            SetLabelVisibility(lbl, System.Windows.Visibility.Visible);
+        }
+
+        private void SetLabelVisibility(System.Windows.Controls.Label lbl, System.Windows.Visibility visibility)
+        {
+            if (lbl.Dispatcher.CheckAccess())
+            {
+                lbl.Visibility = visibility;
+            }
+            else
+            {
+                lbl.Dispatcher.Invoke(delegate
+                {
+                    SetLabelVisibility(lbl, visibility);
+                });
+            }
         }
 
         private void DisableButton(System.Windows.Controls.Button btn)
