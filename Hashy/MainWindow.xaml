@@ -29,14 +29,11 @@
                 <RowDefinition/>
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-
             <Grid Background="#0F0F2D" Grid.ColumnSpan="2" MouseDown="Grid_MouseDown">
-
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -45,12 +42,9 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.ColumnSpan="2">
                     <Image Width="20" Height="20" HorizontalAlignment="Left" Source="/Images/Hashy.png"/>
-
                     <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
                 </DockPanel>
-
                 <TextBlock Text="PRE-RELEASE ALPHA - v0.0.3" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
-
                 <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
                     <StackPanel>
                         <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
@@ -68,7 +62,6 @@
                 Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"/>
                         </Button>
                     </StackPanel>
-
                     <StackPanel>
                         <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MaxButton" Height="25" Width="25" Click="MaxButton_Click">
                             <Button.Style>
@@ -94,7 +87,6 @@
                             </Path>
                         </Button>
                     </StackPanel>
-
                     <StackPanel>
                         <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="CloseButton" Grid.Column="3" Height="25" Width="25" Click="CloseButton_Click">
                             <Button.Style>
@@ -106,11 +98,8 @@
                 Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"/>
                         </Button>
                     </StackPanel>
-
                 </StackPanel>
-
             </Grid>
-
             <StackPanel Grid.Column="0" Grid.Row="1">
                 <Label x:Name="directoryToScanLabel" Content="Directory To Scan:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
@@ -143,7 +132,6 @@
                     <TextBox x:Name="dirTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
-
             <StackPanel Grid.Column="0" Grid.Row="3">
                 <Label x:Name="hashReportDestinationLabel" Content="Hash Report Destination:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
@@ -180,7 +168,6 @@
                 <Label x:Name="hashModeLabel" Content="Hash Mode:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="6">
-
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -238,10 +225,8 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-
                     </StackPanel>
                 </Grid>
-
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="8">
                 <Button x:Name="clearTerminalButton" Content="Clear" HorizontalAlignment="Left" Margin="10,0,0,0" Click="clearTerminalButton_Click">
@@ -276,15 +261,12 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
             <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
                 <DockPanel Margin="10,0,0,0">
                     <Label x:Name="totalPercentageLabel" DockPanel.Dock="Right" VerticalAlignment="Top" Height="25" Content="100%" Foreground="White" Margin="0,0,10,0" HorizontalAlignment="Right"/>
                     <ProgressBar x:Name="totalProgressBar" Foreground="#9126D4" Height="25" VerticalAlignment="Top"/>
                 </DockPanel>
-
             </StackPanel>
-
             <StackPanel Grid.Column="1" Grid.Row="1">
                 <Label x:Name="existingReportLabel" Foreground="White" Content="Existing Report:" Margin="5,0,0,0" HorizontalAlignment="Left" Width="92"/>
             </StackPanel>
@@ -316,9 +298,7 @@
                     </Button>
                     <TextBox x:Name="reportTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
                 </DockPanel>
-
             </StackPanel>
-
             <StackPanel Grid.Column="1" Grid.Row="4">
                 <Button x:Name="checkButton" Content="Check" HorizontalAlignment="Right" Margin="0,0,10,0" Click="checkButton_Click">
                     <Button.Style>
@@ -361,7 +341,6 @@
                         <Border Width="700" Height="35" Background="#BD4FF4" Margin="0,15,0,0" CornerRadius="20"/>
                         <Border Width="700" Height="35" Background="#383660" Margin="75,15,0,0" CornerRadius="20"/>
                     </StackPanel>
-
                     <StackPanel>
                         <Border Width="2000" Height="35" Background="#3DDDC2" Margin="150,0,0,0" CornerRadius="20"/>
                         <Border Width="2000" Height="35" Background="#BD4FF4" Margin="0,15,0,0" CornerRadius="20"/>
@@ -369,7 +348,6 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-
         </Grid>
     </Border>
 </Window>

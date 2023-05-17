@@ -7,12 +7,16 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.ComponentModel;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using System.Drawing;
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -164,13 +168,16 @@ namespace Hashy
             // Create a list called files that will hold the output from the recursive file processor:
             List<string> files = RecursiveFileProcessor.RecursiveFileSearch(GetTBText(dirTextBox));
 
+            int total = files.Count;
+            float totalFloat = files.Count;
+
             // Set totalProgressBar back to 0 (in case previously run):
             SetProgressBar(totalProgressBar, 0);
 
             SetPercentageLabel(totalPercentageLabel, "0%");
 
             // Set totalProgressBar max value to the total of the files we are going to loop through:
-            SetProgressBarMax(totalProgressBar, files.Count);
+            SetProgressBarMax(totalProgressBar, total);
 
             StreamWriter outputFile = OpenFile(GetTBText(outputTextBox));
 
@@ -180,8 +187,6 @@ namespace Hashy
             WriteLine(outputFile, outputHeader);
 
             int i = 1;
-
-            int total = files.Count;
 
             int error = 0;
 
@@ -207,9 +212,9 @@ namespace Hashy
                         AppendLine(consoleListBox, "ERROR - File not found", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = 100 / files.Count * i + "%";
+                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
-                        if (i == files.Count)
+                        if (i == total)
                         {
                             SetPercentageLabel(totalPercentageLabel, "100%");
                         }
@@ -227,9 +232,9 @@ namespace Hashy
                         AppendLine(consoleListBox, $"{e}", Brushes.Red);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = 100 / files.Count * i + "%";
+                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
-                        if (i == files.Count)
+                        if (i == total)
                         {
                             SetPercentageLabel(totalPercentageLabel, "100%");
                         }
@@ -252,9 +257,9 @@ namespace Hashy
                         MessageBox.Show($"ERROR - File not found:\n{file}", "ERROR - File Not Found", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = 100 / files.Count * i + "%";
+                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
-                        if (i == files.Count)
+                        if (i == total)
                         {
                             SetPercentageLabel(totalPercentageLabel, "100%");
                         }
@@ -269,9 +274,9 @@ namespace Hashy
                         MessageBox.Show($"ERROR - An unknown error occured with file:\n{file}\nThe error message was:\n{e}", "ERROR - An Unknown Error Occured", MessageBoxButton.OK, MessageBoxImage.Error);
 
                         SetProgressBar(totalProgressBar, i);
-                        string f = 100 / files.Count * i + "%";
+                        string f = Math.Round(100 / totalFloat * i, 0) + "%";
                         SetPercentageLabel(totalPercentageLabel, f);
-                        if (i == files.Count)
+                        if (i == total)
                         {
                             SetPercentageLabel(totalPercentageLabel, "100%");
                         }
@@ -287,14 +292,14 @@ namespace Hashy
                     continue;
                 }
 
-                // Add the value output to the fileDetails list along with the current file:
+                //Add the value output to the fileDetails list along with the current file:
                 string line = $"{file},{value},{GetFileLastModified(file)}";
                 WriteLine(outputFile, line);
 
                 SetProgressBar(totalProgressBar, i);
-                string d = 100 / files.Count * i + "%";
+                string d = Math.Round(100 / totalFloat * i, 0) + "%";
                 SetPercentageLabel(totalPercentageLabel, d);
-                if (i == files.Count)
+                if (i == total)
                 {
                     SetPercentageLabel(totalPercentageLabel, "100%");
                 }
