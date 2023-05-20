@@ -8,6 +8,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Forms;
+using System.Windows.Media;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using File = System.IO.File;
@@ -26,8 +28,13 @@ namespace Hashy
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static bool isMaximized = false;
+        private static Rect originalWindowRect;
+
         private ObservableCollection<ConsoleMessage> consoleMessages;
+
         private string? hashMode;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -502,6 +509,56 @@ namespace Hashy
             EnableUI();
         }
 
+        public static void MaximizeWindow(Window window)
+        {
+            var screen = Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(window).Handle);
+            var workingArea = screen.WorkingArea;
+
+            var presentationSource = PresentationSource.FromVisual(window);
+            var screenDpiScaleX = presentationSource?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+            var screenDpiScaleY = presentationSource?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+            var windowDpiScaleX = GetDpiScaleX(window);
+            var windowDpiScaleY = GetDpiScaleY(window);
+
+            if (!isMaximized)
+            {
+                originalWindowRect = new Rect(
+                    window.Left / (screenDpiScaleX * windowDpiScaleX),
+                    window.Top / (screenDpiScaleY * windowDpiScaleY),
+                    window.Width / (screenDpiScaleX * windowDpiScaleX),
+                    window.Height / (screenDpiScaleY * windowDpiScaleY)
+                );
+
+                window.Left = workingArea.Left / screenDpiScaleX;
+                window.Top = workingArea.Top / screenDpiScaleY;
+                window.Width = workingArea.Width / screenDpiScaleX;
+                window.Height = workingArea.Height / screenDpiScaleY;
+
+                isMaximized = true;
+            }
+            else
+            {
+                window.Left = originalWindowRect.Left * (screenDpiScaleX * windowDpiScaleX);
+                window.Top = originalWindowRect.Top * (screenDpiScaleY * windowDpiScaleY);
+                window.Width = originalWindowRect.Width * (screenDpiScaleX * windowDpiScaleX);
+                window.Height = originalWindowRect.Height * (screenDpiScaleY * windowDpiScaleY);
+
+                isMaximized = false;
+            }
+        }
+
+        private static double GetDpiScaleX(Visual visual)
+        {
+            var source = PresentationSource.FromVisual(visual);
+            return source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+        }
+
+        private static double GetDpiScaleY(Visual visual)
+        {
+            var source = PresentationSource.FromVisual(visual);
+            return source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
+        }
+
         private string GetTextBoxText(System.Windows.Controls.TextBox tb)
         {
             if (tb.Dispatcher.CheckAccess())
@@ -919,14 +976,7 @@ namespace Hashy
 
         private void MaxButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Normal)
-            {
-                this.WindowState = WindowState.Maximized;
-            }
-            else
-            {
-                this.WindowState = WindowState.Normal;
-            }
+            MaximizeWindow(this);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -938,14 +988,7 @@ namespace Hashy
         {
             if (e.ClickCount == 2)
             {
-                if (this.WindowState == WindowState.Normal)
-                {
-                    this.WindowState = WindowState.Maximized;
-                }
-                else if (this.WindowState == WindowState.Maximized)
-                {
-                    this.WindowState = WindowState.Normal;
-                }
+                MaximizeWindow(this);
             }
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
