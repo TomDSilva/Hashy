@@ -259,6 +259,7 @@
             <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
                 <DockPanel Margin="10,0,0,0">
                     <Label x:Name="totalPercentageLabel" DockPanel.Dock="Right" VerticalAlignment="Top" Height="25" Width="40" Visibility="Hidden" Content="100%" Foreground="White" Margin="0,0,10,0" HorizontalAlignment="Right" IsEnabled="False"/>
+                    <Label x:Name="timerLabel" DockPanel.Dock="Left" Width="55" Foreground="White" Content="00:00:00"/>
                     <ProgressBar x:Name="totalProgressBar" Foreground="#9126D4" Height="25" VerticalAlignment="Top"/>
                 </DockPanel>
             </StackPanel>

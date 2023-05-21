@@ -15,6 +15,7 @@ using Brushes = System.Windows.Media.Brushes;
 using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using System.Windows.Threading;
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -35,9 +36,15 @@ namespace Hashy
 
         private string? hashMode;
 
+        private DispatcherTimer timer;
+        private TimeSpan elapsedTime;
+        private bool isTimerRunning;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            InitializeTimer();
 
             // TEMP testing parameters not meant for production:
             dirTextBox.Text = "C:\\Hashy Test Folder\\Source";
@@ -72,6 +79,7 @@ namespace Hashy
         {
             //var about = new About();
             //about.Show();
+            StartTimer();
             Console.ReadLine();
         }
 
@@ -160,6 +168,8 @@ namespace Hashy
                     return;
                 }
             }
+
+            StartTimer();
 
             // Variable to hold when we started the scan:
             DateTime started = DateTime.Now;
@@ -326,10 +336,12 @@ namespace Hashy
 
             AppendLine(consoleListBox, $"Scan finished at {finished}");
 
-            var scanDuration = finished - started;
+            string scanDurationSeconds = Math.Floor(elapsedTime.TotalSeconds).ToString();
+
+            StopTimer();
 
             // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
-            AppendLine(consoleListBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
+            AppendLine(consoleListBox, $"Scan took {scanDurationSeconds} seconds");
 
             AppendLine(consoleListBox, "---------------------------------Scan Finished---------------------------------");
 
@@ -348,6 +360,8 @@ namespace Hashy
 
             // Variable to hold when we started the scan:
             DateTime started = DateTime.Now;
+
+            StartTimer();
 
             string reportLocation = GetTextBoxText(reportTextBox);
 
@@ -493,10 +507,12 @@ namespace Hashy
 
                 AppendLine(consoleListBox, $"Scan finished at {finished}");
 
-                var scanDuration = finished - started;
+                string scanDurationSeconds = Math.Floor(elapsedTime.TotalSeconds).ToString();
+
+                StopTimer();
 
                 // TODO : Rework logic so that if it takes longer then X time its minutes (instead of seconds), more then Y its hours?
-                AppendLine(consoleListBox, $"Scan took {scanDuration.TotalSeconds.ToString("N0")} seconds");
+                AppendLine(consoleListBox, $"Scan took {scanDurationSeconds} seconds");
                 AppendLine(consoleListBox, "---------------------------------Check Finished---------------------------------");
             }
             else
@@ -992,6 +1008,67 @@ namespace Hashy
             }
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
+        }
+
+        private void InitializeTimer()
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            elapsedTime += TimeSpan.FromSeconds(1);
+            timerLabel.Content = elapsedTime.ToString();
+        }
+
+        private void StartTimer()
+        {
+            if (!isTimerRunning)
+            {
+                timer.Start();
+                isTimerRunning = true;
+            }
+        }
+
+        private void PauseTimer()
+        {
+            if (isTimerRunning)
+            {
+                timer.Stop();
+                isTimerRunning = false;
+            }
+        }
+
+        private void StopTimer()
+        {
+            timer.Stop();
+            SetLabelContent(timerLabel, elapsedTime.ToString());
+            elapsedTime = TimeSpan.Zero;
+            isTimerRunning = false;
+        }
+
+        private void ResetTimer()
+        {
+            elapsedTime = TimeSpan.Zero;
+            SetLabelContent(timerLabel, elapsedTime.ToString());
+            isTimerRunning = false;
+        }
+
+        private void SetLabelContent(System.Windows.Controls.Label lb, string content)
+        {
+            if (lb.Dispatcher.CheckAccess())
+            {
+                lb.Content = content;
+            }
+            else
+            {
+                lb.Dispatcher.Invoke(delegate
+                {
+                    SetLabelContent(lb, content);
+                });
+            }
         }
     }
 }
