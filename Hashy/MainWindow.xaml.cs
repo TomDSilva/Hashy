@@ -16,6 +16,7 @@ using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Windows.Threading;
+using static System.Net.WebRequestMethods;
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -372,6 +373,14 @@ namespace Hashy
             AppendLine(consoleListBox, "Checking files against existing report:");
             AppendLine(consoleListBox, reportLocation);
 
+            int total = report.Count;
+            float totalFloat = report.Count;
+
+            // Set totalProgressBar back to 0 (in case previously run):
+            SetProgressBar(totalProgressBar, 0);
+
+            UnhideLabel(totalPercentageLabel);
+
             if (UIDCheck(reportLocation))
             {
                 AppendLine(consoleListBox, "Report file passed UID check", Brushes.Green);
@@ -481,7 +490,7 @@ namespace Hashy
                         AppendLine(consoleListBox, "!!!ERROR!!!", Brushes.Red);
                     }
                     SetProgressBar(totalProgressBar, i);
-                    string d = 100 / report.Count * i + "%";
+                    string d = Math.Round(100 / totalFloat * i, 0) + "%";
                     SetPercentageLabel(totalPercentageLabel, d);
                     if (i == report.Count)
                     {
