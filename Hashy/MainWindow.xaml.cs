@@ -16,7 +16,6 @@ using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Windows.Threading;
-using static System.Net.WebRequestMethods;
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -37,7 +36,7 @@ namespace Hashy
 
         private string? hashMode;
 
-        private DispatcherTimer timer;
+        private DispatcherTimer timer = new DispatcherTimer();
         private TimeSpan elapsedTime;
         private bool isTimerRunning;
 
@@ -150,8 +149,8 @@ namespace Hashy
             // Disable UI:
             DisableUI();
 
-            string scanRoot = GetTBText(dirTextBox);
-            string reportDest = GetTBText(outputTextBox);
+            string scanRoot = GetTextBoxText(dirTextBox);
+            string reportDest = GetTextBoxText(outputTextBox);
 
             AppendLine(consoleListBox, "---------------------------------Scan Started---------------------------------");
 
@@ -180,7 +179,7 @@ namespace Hashy
             AppendLine(consoleListBox, reportDest);
 
             // Create a list called files that will hold the output from the recursive file processor:
-            List<string> files = RecursiveFileProcessor.RecursiveFileSearch(GetTBText(dirTextBox));
+            List<string> files = RecursiveFileProcessor.RecursiveFileSearch(GetTextBoxText(dirTextBox));
 
             int total = files.Count;
             float totalFloat = files.Count;
@@ -190,16 +189,16 @@ namespace Hashy
 
             UnhideLabel(totalPercentageLabel);
 
-            SetPercentageLabel(totalPercentageLabel, "0%");
+            SetLabelContent(totalPercentageLabel, "0%");
 
             // Set totalProgressBar max value to the total of the files we are going to loop through:
             SetProgressBarMax(totalProgressBar, total);
 
-            StreamWriter outputFile = OpenFile(GetTBText(outputTextBox));
+            StreamWriter outputFile = OpenFile(GetTextBoxText(outputTextBox));
 
             WriteLine(outputFile, @"f7c07c6ab1c9faaccee57b77b826ff51\r\ncf3b9982a86afb4dd9b50556f1817aa9\r\ne1d4aa4e629ee2d4e553c538bfcad177\r\ne724f3d18bf2985fea81a912c642ffba\r\nc37dd1fc6a3ddd4fdd77fe3ceedf8974\r\n96d0ee391f51eb3e2a00064ed3a25eac\r\n11ae1e159900bfd8fe6731825ffe43e9\r\nbaa9d174ce36a1ac00a5fdbde0b55898\r\n0957faec8615cc14a0c3b229c92d38ab\r\nfa388c8c3a97671b1557a4ae53bc468b");
 
-            string outputHeader = $"{started.ToString()},{GetTBText(dirTextBox)},{hashMode}";
+            string outputHeader = $"{started.ToString()},{GetTextBoxText(dirTextBox)},{hashMode}";
             WriteLine(outputFile, outputHeader);
 
             int i = 1;
@@ -229,10 +228,10 @@ namespace Hashy
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / total * i + "%";
-                        SetPercentageLabel(totalPercentageLabel, f);
+                        SetLabelContent(totalPercentageLabel, f);
                         if (i == total)
                         {
-                            SetPercentageLabel(totalPercentageLabel, "100%");
+                            SetLabelContent(totalPercentageLabel, "100%");
                         }
                         i = i + 1;
 
@@ -249,10 +248,10 @@ namespace Hashy
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / total * i + "%";
-                        SetPercentageLabel(totalPercentageLabel, f);
+                        SetLabelContent(totalPercentageLabel, f);
                         if (i == total)
                         {
-                            SetPercentageLabel(totalPercentageLabel, "100%");
+                            SetLabelContent(totalPercentageLabel, "100%");
                         }
                         i = i + 1;
 
@@ -274,10 +273,10 @@ namespace Hashy
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / total * i + "%";
-                        SetPercentageLabel(totalPercentageLabel, f);
+                        SetLabelContent(totalPercentageLabel, f);
                         if (i == total)
                         {
-                            SetPercentageLabel(totalPercentageLabel, "100%");
+                            SetLabelContent(totalPercentageLabel, "100%");
                         }
                         i = i + 1;
 
@@ -291,10 +290,10 @@ namespace Hashy
 
                         SetProgressBar(totalProgressBar, i);
                         string f = 100 / total * i + "%";
-                        SetPercentageLabel(totalPercentageLabel, f);
+                        SetLabelContent(totalPercentageLabel, f);
                         if (i == total)
                         {
-                            SetPercentageLabel(totalPercentageLabel, "100%");
+                            SetLabelContent(totalPercentageLabel, "100%");
                         }
                         i = i + 1;
 
@@ -314,10 +313,10 @@ namespace Hashy
 
                 SetProgressBar(totalProgressBar, i);
                 string d = Math.Round(100 / totalFloat * i, 0) + "%";
-                SetPercentageLabel(totalPercentageLabel, d);
+                SetLabelContent(totalPercentageLabel, d);
                 if (i == total)
                 {
-                    SetPercentageLabel(totalPercentageLabel, "100%");
+                    SetLabelContent(totalPercentageLabel, "100%");
                 }
                 i = i + 1;
             }
@@ -388,7 +387,7 @@ namespace Hashy
                 // Set totalProgressBar back to 0 (in case previously run):
                 SetProgressBar(totalProgressBar, 0);
 
-                SetPercentageLabel(totalPercentageLabel, "0%");
+                SetLabelContent(totalPercentageLabel, "0%");
 
                 // Set totalProgressBar max value to the total of the files we are going to loop through:
                 SetProgressBarMax(totalProgressBar, report.Count);
@@ -409,7 +408,7 @@ namespace Hashy
                     {
                         SetProgressBar(totalProgressBar, i);
                         string e = 100 / report.Count * i + "%";
-                        SetPercentageLabel(totalPercentageLabel, e);
+                        SetLabelContent(totalPercentageLabel, e);
 
                         continue;
                     }
@@ -433,10 +432,10 @@ namespace Hashy
 
                             SetProgressBar(totalProgressBar, i);
                             string f = 100 / report.Count * i + "%";
-                            SetPercentageLabel(totalPercentageLabel, f);
+                            SetLabelContent(totalPercentageLabel, f);
                             if (i == report.Count)
                             {
-                                SetPercentageLabel(totalPercentageLabel, "100%");
+                                SetLabelContent(totalPercentageLabel, "100%");
                             }
 
                             i = i + 1;
@@ -454,10 +453,10 @@ namespace Hashy
 
                             SetProgressBar(totalProgressBar, i);
                             string f = 100 / report.Count * i + "%";
-                            SetPercentageLabel(totalPercentageLabel, f);
+                            SetLabelContent(totalPercentageLabel, f);
                             if (i == report.Count)
                             {
-                                SetPercentageLabel(totalPercentageLabel, "100%");
+                                SetLabelContent(totalPercentageLabel, "100%");
                             }
 
                             i = i + 1;
@@ -491,10 +490,10 @@ namespace Hashy
                     }
                     SetProgressBar(totalProgressBar, i);
                     string d = Math.Round(100 / totalFloat * i, 0) + "%";
-                    SetPercentageLabel(totalPercentageLabel, d);
+                    SetLabelContent(totalPercentageLabel, d);
                     if (i == report.Count)
                     {
-                        SetPercentageLabel(totalPercentageLabel, "100%");
+                        SetLabelContent(totalPercentageLabel, "100%");
 
                         if (corruptFile)
                         {
@@ -584,26 +583,9 @@ namespace Hashy
             return source?.CompositionTarget?.TransformToDevice.M22 ?? 1.0;
         }
 
-        private string GetTextBoxText(System.Windows.Controls.TextBox tb)
-        {
-            if (tb.Dispatcher.CheckAccess())
-            {
-                return tb.Text;
-            }
-            else
-            {
-                string text = "";
-                tb.Dispatcher.Invoke(delegate
-                {
-                    text = tb.Text;
-                });
-                return text;
-            }
-        }
-
         private void SetScanButtonStatus()
         {
-            if (Directory.Exists(GetTBText(dirTextBox)))
+            if (Directory.Exists(GetTextBoxText(dirTextBox)))
             {
                 EnableButton(scanButton);
             }
@@ -615,7 +597,7 @@ namespace Hashy
 
         private void SetCheckButtonStatus()
         {
-            if (File.Exists(GetTBText(reportTextBox)))
+            if (File.Exists(GetTextBoxText(reportTextBox)))
             {
                 EnableButton(checkButton);
             }
@@ -798,6 +780,21 @@ namespace Hashy
             SetLabelVisibility(lbl, System.Windows.Visibility.Visible);
         }
 
+        private void SetLabelContent(System.Windows.Controls.Label label, string value)
+        {
+            if (label.Dispatcher.CheckAccess())
+            {
+                label.Content = value;
+            }
+            else
+            {
+                label.Dispatcher.Invoke(delegate
+                {
+                    label.Content = value;
+                });
+            }
+        }
+
         private void SetLabelVisibility(System.Windows.Controls.Label lbl, System.Windows.Visibility visibility)
         {
             if (lbl.Dispatcher.CheckAccess())
@@ -846,6 +843,23 @@ namespace Hashy
         private void EnableTextBox(System.Windows.Controls.TextBox tb)
         {
             SetTextBoxStatus(tb, true);
+        }
+
+        private string GetTextBoxText(System.Windows.Controls.TextBox tb)
+        {
+            if (tb.Dispatcher.CheckAccess())
+            {
+                return tb.Text;
+            }
+            else
+            {
+                string text = "";
+                tb.Dispatcher.Invoke(delegate
+                {
+                    text = tb.Text;
+                });
+                return text;
+            }
         }
 
         private void SetTextBoxStatus(System.Windows.Controls.TextBox tb, bool status)
@@ -955,39 +969,6 @@ namespace Hashy
             }
         }
 
-        private void SetPercentageLabel(System.Windows.Controls.Label label, string value)
-        {
-            if (label.Dispatcher.CheckAccess())
-            {
-                label.Content = value;
-            }
-            else
-            {
-                label.Dispatcher.Invoke(delegate
-                {
-                    label.Content = value;
-                });
-            }
-        }
-
-        private string GetTBText(System.Windows.Controls.TextBox tb)
-        {
-            if (tb.Dispatcher.CheckAccess())
-            {
-                return tb.Text;
-            }
-            else
-            {
-                string tbText = "";
-                tb.Dispatcher.Invoke(delegate
-                {
-                    tbText = tb.Text;
-                });
-
-                return tbText;
-            }
-        }
-
         public static bool DateTimeSecondsEquals(DateTime dt1, DateTime dt2)
         {
             return dt1.Year == dt2.Year && dt1.Month == dt2.Month && dt1.Day == dt2.Day &&
@@ -1026,7 +1007,7 @@ namespace Hashy
             timer.Tick += Timer_Tick;
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object? sender, EventArgs e)
         {
             elapsedTime += TimeSpan.FromSeconds(1);
             timerLabel.Content = elapsedTime.ToString();
@@ -1063,21 +1044,6 @@ namespace Hashy
             elapsedTime = TimeSpan.Zero;
             SetLabelContent(timerLabel, elapsedTime.ToString());
             isTimerRunning = false;
-        }
-
-        private void SetLabelContent(System.Windows.Controls.Label lb, string content)
-        {
-            if (lb.Dispatcher.CheckAccess())
-            {
-                lb.Content = content;
-            }
-            else
-            {
-                lb.Dispatcher.Invoke(delegate
-                {
-                    SetLabelContent(lb, content);
-                });
-            }
         }
     }
 }
