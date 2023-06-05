@@ -587,7 +587,7 @@ namespace Hashy
 
         private void SetScanButtonStatus()
         {
-            if (Directory.Exists(GetTextBoxText(dirTextBox)))
+            if (Directory.Exists(GetTextBoxText(dirTextBox)) && Directory.Exists(Path.GetDirectoryName(GetTextBoxText(outputTextBox))))
             {
                 EnableButton(scanButton);
             }
