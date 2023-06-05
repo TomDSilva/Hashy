@@ -42,7 +42,7 @@
                     <Image Width="20" Height="20" HorizontalAlignment="Left" Source="/Images/Hashy.png"/>
                     <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
                 </DockPanel>
-                <TextBlock Text="PRE-RELEASE ALPHA - v0.0.3" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
+                <TextBlock Text="PRE-RELEASE ALPHA - v0.0.4-alpha" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
                 <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
                     <StackPanel>
                         <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
@@ -180,9 +180,12 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsSelected" Value="False">
-                                                        <Setter TargetName="Border" Property="Background" Value="Black" />
+                                                        <Setter TargetName="Border" Property="Background" Value="#383660" />
                                                     </Trigger>
                                                     <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="#BD4FF4" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
                                                         <Setter TargetName="Border" Property="Background" Value="#3DDDC2" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
@@ -321,16 +324,13 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-
             <StackPanel Grid.Column="1" Grid.Row="6">
                 <Button x:Name="debugButton" Content="DEBUG!" Visibility="Visible" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
             </StackPanel>
-
             <Grid Grid.Column="1" Grid.RowSpan="2" Margin="160, -410, -620, 85" Panel.ZIndex="-1">
                 <Grid.RenderTransform>
                     <RotateTransform Angle="50"/>
                 </Grid.RenderTransform>
-
                 <StackPanel Orientation="Horizontal" Margin="-350, 250, -255, -250">
                     <StackPanel>
                         <Border Width="700" Height="35" Background="#3DDDC2" Margin="150,0,0,0" CornerRadius="20"/>

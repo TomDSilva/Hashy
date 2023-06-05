@@ -79,7 +79,7 @@ namespace Hashy
         {
             //var about = new About();
             //about.Show();
-            StartTimer();
+            hashModeComboBox.IsEnabled = false;
             Console.ReadLine();
         }
 
