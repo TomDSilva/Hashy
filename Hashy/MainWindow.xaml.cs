@@ -178,6 +178,8 @@ namespace Hashy
             AppendLine(consoleListBox, "Report will be saved here:");
             AppendLine(consoleListBox, reportDest);
 
+            AppendLine(consoleListBox, "Building list of files to scan, this can take a while...");
+
             // Create a list called files that will hold the output from the recursive file processor:
             List<string> files = RecursiveFileProcessor.RecursiveFileSearch(GetTextBoxText(dirTextBox));
 

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icons8-hashtag-48.ico</ApplicationIcon>
-    <FileVersion>0.0.3</FileVersion>
+    <FileVersion>0.0.4</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
