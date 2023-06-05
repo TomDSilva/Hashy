@@ -26,16 +26,16 @@ Any inconsistencies are output to the console window in red for the user to revi
 ## Screenshots
 
 ### Default view after opening:
-![image](https://user-images.githubusercontent.com/20383538/229202580-b6ba4a90-b335-4c03-9f03-1629bf457e30.png)
+![image](https://github.com/TomDSilva/Hashy/assets/20383538/72c523b8-3c03-4487-92ee-fea4201e2321)
 
 ### During an initial scan:
-![image](https://user-images.githubusercontent.com/20383538/229202757-cc1d5578-70c9-4cbb-be4a-c84992537577.png)
+![image](https://github.com/TomDSilva/Hashy/assets/20383538/4a8e59df-b5d1-413e-97d4-82f547c45f58)
 
 ### After the initial scan finishes:
-![image](https://user-images.githubusercontent.com/20383538/229202834-43871dcb-0b78-447a-ba14-75f6507f41b3.png)
+![image](https://github.com/TomDSilva/Hashy/assets/20383538/18e15db2-c3ee-4597-bc81-0e7a149e8c5b)
 
 ### After the follow up check finishes:
-![image](https://user-images.githubusercontent.com/20383538/229202957-8de2c2a2-aaf0-439e-965d-450a71c6223b.png)
+![image](https://github.com/TomDSilva/Hashy/assets/20383538/785d7943-5526-4919-a6f2-7d1ee6002d67)
 
 ### Example CSV file created from initial scan:
 ![image](https://user-images.githubusercontent.com/20383538/229202491-7bcba0bc-d655-4f4c-99e3-7e6761c5bd30.png)
