@@ -10,12 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Dosis.ttf" />
     <None Remove="Hashy.png" />
     <None Remove="Images\Hashy.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="icons8-hashtag-48.ico" />
+    <Resource Include="Fonts\Dosis.ttf" />
     <Resource Include="Images\Hashy.png" />
   </ItemGroup>
 

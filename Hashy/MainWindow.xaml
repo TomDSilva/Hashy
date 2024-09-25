@@ -16,14 +16,14 @@
             </Grid.Style>
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="18"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="18"/>
+                <RowDefinition Height="22"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="22"/>
-                <RowDefinition Height="18"/>
-                <RowDefinition Height="18"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition/>
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
@@ -42,7 +42,7 @@
                     <Image Width="20" Height="20" HorizontalAlignment="Left" Source="/Images/Hashy.png"/>
                     <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
                 </DockPanel>
-                <TextBlock Text="PRE-RELEASE ALPHA - v0.0.4-alpha" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
+                <TextBlock Text="PRE-RELEASE ALPHA - v0.0.5-alpha" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
                 <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
                     <StackPanel>
                         <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
@@ -96,7 +96,7 @@
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Column="0" Grid.Row="1">
-                <Label x:Name="directoryToScanLabel" Content="Directory To Scan:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                <Label x:Name="directoryToScanLabel" Content="Directory To Scan:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="2">
                 <DockPanel>
@@ -104,6 +104,7 @@
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                <Setter Property="FontSize" Value="14"/>
                                 <Setter Property="Background" Value="#BD4FF4"/>
                                 <Setter Property="Cursor" Value="Hand"/>
                                 <Style.Triggers>
@@ -118,17 +119,17 @@
                         </Button.Style>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                <Border Width="100" Height="20" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
                                     <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <TextBox x:Name="dirTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBox x:Name="dirTextBox" Margin="10,0,1,0" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Height="20" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="3">
-                <Label x:Name="hashReportDestinationLabel" Content="Hash Report Destination:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                <Label x:Name="hashReportDestinationLabel" Content="Hash Report Destination:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="4">
                 <DockPanel>
@@ -136,6 +137,7 @@
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                <Setter Property="FontSize" Value="14"/>
                                 <Setter Property="Background" Value="#BD4FF4"/>
                                 <Setter Property="Cursor" Value="Hand"/>
                                 <Style.Triggers>
@@ -150,17 +152,17 @@
                         </Button.Style>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                <Border Width="100" Height="20" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
                                     <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <TextBox x:Name="outputTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBox x:Name="outputTextBox" Margin="10,0,1,0" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Height="20" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="5">
-                <Label x:Name="hashModeLabel" Content="Hash Mode:" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                <Label x:Name="hashModeLabel" Content="Hash Mode:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="6">
                 <Grid>
@@ -169,7 +171,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <ComboBox Style="{DynamicResource ComboBoxStyleBlackFrost}" x:Name="hashModeComboBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" Width="120">
+                        <ComboBox Style="{DynamicResource ComboBoxStyleBlackFrost}" x:Name="hashModeComboBox" FontFamily="Fonts/#Dosis" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" Height="20" Width="120">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="{x:Type ComboBoxItem}">
                                     <Setter Property="Template">
@@ -203,6 +205,7 @@
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                    <Setter Property="FontSize" Value="14"/>
                                     <Setter Property="Background" Value="#BD4FF4"/>
                                     <Setter Property="Cursor" Value="Hand"/>
                                     <Style.Triggers>
@@ -217,7 +220,7 @@
                             </Button.Style>
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                    <Border Width="100" Height="20" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
                                         <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
@@ -231,6 +234,7 @@
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                            <Setter Property="FontSize" Value="14"/>
                             <Setter Property="Background" Value="#BD4FF4"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Style.Triggers>
@@ -245,14 +249,14 @@
                     </Button.Style>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                            <Border Width="100" Height="20" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
                                 <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <ListBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleListBox" Margin="10,1,10,1" Background="#7F000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+            <ListBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleListBox" Margin="10,1,10,1" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Message}" Foreground="{Binding Color}"/>
@@ -261,20 +265,21 @@
             </ListBox>
             <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
                 <DockPanel Margin="10,0,0,0">
-                    <Label x:Name="totalPercentageLabel" DockPanel.Dock="Right" Height="25" Width="40" Visibility="Hidden" Content="100%" Foreground="White" Margin="0,0,10,0" HorizontalContentAlignment="Right" IsEnabled="False"/>
-                    <Label x:Name="timerLabel" DockPanel.Dock="Left" Width="55" Foreground="White" Content="00:00:00"/>
+                    <Label x:Name="totalPercentageLabel" DockPanel.Dock="Right" FontFamily="Fonts/#Dosis" Height="25" Width="40" Visibility="Hidden" Content="100%" Foreground="White" Margin="0,0,10,0" HorizontalContentAlignment="Right" IsEnabled="False"/>
+                    <Label x:Name="timerLabel" DockPanel.Dock="Left" FontFamily="Fonts/#Dosis" Width="55" Foreground="White" Content="00:00:00"/>
                     <ProgressBar x:Name="totalProgressBar" Foreground="#9126D4" Height="25"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1">
-                <Label x:Name="existingReportLabel" Foreground="White" Content="Existing Report:" Margin="5,0,0,0" HorizontalAlignment="Left" Width="92"/>
+                <Label x:Name="existingReportLabel" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Content="Existing Report:" Margin="5,0,0,0" HorizontalAlignment="Left" Width="92"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="2">
                 <DockPanel>
-                    <Button x:Name="existingReportButton" DockPanel.Dock="Right" Content="Browse" Margin="0,0,10,0" HorizontalAlignment="Right" Click="existingReportButton_Click">
+                    <Button x:Name="existingReportButton" DockPanel.Dock="Right" Content="Browse" FontFamily="Fonts/#Dosis" Margin="0,0,10,0" HorizontalAlignment="Right" Click="existingReportButton_Click">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                                <Setter Property="FontSize" Value="14"/>
                                 <Setter Property="Background" Value="#BD4FF4"/>
                                 <Setter Property="Cursor" Value="Hand"/>
                                 <Style.Triggers>
@@ -289,20 +294,21 @@
                         </Button.Style>
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                                <Border Width="100" Height="20" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
                                     <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <TextBox x:Name="reportTextBox" Margin="10,0,1,0" Background="#7F000000" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBox x:Name="reportTextBox" Margin="10,0,1,0" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Height="20" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="4">
-                <Button x:Name="checkButton" Content="Check" HorizontalAlignment="Right" Margin="0,0,10,0" Click="checkButton_Click">
+                <Button x:Name="checkButton" Content="Check" FontFamily="Fonts/#Dosis" HorizontalAlignment="Right" Margin="0,0,10,0" Click="checkButton_Click">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
+                            <Setter Property="FontSize" Value="14"/>
                             <Setter Property="Background" Value="#BD4FF4"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Style.Triggers>
@@ -317,7 +323,7 @@
                     </Button.Style>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="18" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+                            <Border Width="100" Height="20" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
                                 <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
