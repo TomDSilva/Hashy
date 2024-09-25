@@ -16,6 +16,9 @@ using File = System.IO.File;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Windows.Threading;
+using System.Reflection;
+using System.Windows.Controls.Primitives;
+using Button = System.Windows.Controls.Button;
 
 //Links that helped me build this:
 //https://stackoverflow.com/questions/13435699/why-wont-the-wpf-progressbar-stretch-to-fit
@@ -1046,6 +1049,58 @@ namespace Hashy
             elapsedTime = TimeSpan.Zero;
             SetLabelContent(timerLabel, elapsedTime.ToString());
             isTimerRunning = false;
+        }
+
+        // Handles the click event of the main menu buttons (File, Edit, View, Help)
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button clickedButton = sender as Button;
+            string popupName = clickedButton.Tag.ToString();
+
+            // Get the corresponding popup by name
+            Popup popup = (Popup)this.FindName(popupName);
+
+            // Toggle the popup visibility
+            if (popup != null)
+            {
+                popup.IsOpen = !popup.IsOpen;
+            }
+        }
+
+        // Handles click event for submenu items
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Button clickedItem = sender as Button;
+
+            string windowName = clickedItem.Tag.ToString();
+
+            try
+            {
+                // Get the current assembly (where all the windows are defined)
+                Assembly currentAssembly = Assembly.GetExecutingAssembly();
+
+                // Find the type (class) in the current assembly that matches the window name
+                Type windowType = currentAssembly.GetType($"Hashy.{windowName}");
+
+                // Ensure the type exists and is a subclass of Window
+                if (windowType != null && windowType.IsSubclassOf(typeof(Window)))
+                {
+                    // Create an instance of the window
+                    Window windowInstance = (Window)Activator.CreateInstance(windowType);
+
+                    // Open the window
+                    windowInstance.Show();
+                }
+                else
+                {
+                    MessageBox.Show($"Window '{windowName}' not found or is not a valid window class.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that may occur (e.g., if the window class cannot be instantiated)
+                MessageBox.Show($"Error opening window '{windowName}': {ex.Message}");
+            }
         }
     }
 }

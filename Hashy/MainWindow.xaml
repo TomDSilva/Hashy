@@ -3,6 +3,53 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" AllowsTransparency="True" Background="#181735" Title="Hashy" Height="450" Width="800" MinHeight="300" MinWidth="600" ResizeMode="CanResizeWithGrip" WindowStyle="None">
+
+    <Window.Resources>
+        <!-- Style for the Menu Buttons -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#BD4FF4"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontFamily" Value="Fonts/#Dosis"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Height" Value="15"/>
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3DDDC2"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF005A9E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for Submenu Buttons -->
+        <Style x:Key="SubMenuButtonStyle" TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Background" Value="#BD4FF4"/>
+            <Setter Property="FontFamily" Value="Fonts/#Dosis"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+    </Window.Resources>
+
     <Border>
         <Grid>
             <Grid.Style>
@@ -16,6 +63,7 @@
             </Grid.Style>
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="22"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="22"/>
@@ -95,10 +143,30 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-            <StackPanel Grid.Column="0" Grid.Row="1">
-                <Label x:Name="directoryToScanLabel" Content="Directory To Scan:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            <StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">
+                <DockPanel>
+                <Button Content="Options" Margin="0" VerticalAlignment="Top" FontFamily="Fonts/#Dosis" FontSize="12" Height="20" Style="{StaticResource MenuButtonStyle}" Click="MenuButton_Click" Tag="FilePopup">
+                <Button.Template>
+    <ControlTemplate TargetType="Button">
+        <Border CornerRadius="0" Background="{TemplateBinding Background}" BorderBrush="#0F0F2D" BorderThickness="1">
+            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Border>
+    </ControlTemplate>
+</Button.Template>
+                </Button>
+                <!-- Popup for File Menu -->
+                    <Popup x:Name="FilePopup" Placement="Bottom" StaysOpen="False" AllowsTransparency="True">
+                        <StackPanel Background="#FF2D2D30" Margin="5" Width="100">
+                            <Separator Height="1" Background="Gray"/>
+                            <Button Content="Exit" FontFamily="Fonts/#Dosis" FontSize="14" Style="{StaticResource SubMenuButtonStyle}" Click="CloseButton_Click"/>
+                        </StackPanel>
+                    </Popup>
+                </DockPanel>
             </StackPanel>
             <StackPanel Grid.Column="0" Grid.Row="2">
+                <Label x:Name="directoryToScanLabel" Content="Directory To Scan:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="3">
                 <DockPanel>
                     <Button x:Name="sourceButton" DockPanel.Dock="Right" Content="Browse" Margin="0,0,10,0" Click="sourceButton_Click">
                         <Button.Style>
@@ -128,10 +196,10 @@
                     <TextBox x:Name="dirTextBox" Margin="10,0,1,0" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Height="20" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
-            <StackPanel Grid.Column="0" Grid.Row="3">
+            <StackPanel Grid.Column="0" Grid.Row="4">
                 <Label x:Name="hashReportDestinationLabel" Content="Hash Report Destination:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
-            <StackPanel Grid.Column="0" Grid.Row="4">
+            <StackPanel Grid.Column="0" Grid.Row="5">
                 <DockPanel>
                     <Button x:Name="outputButton" DockPanel.Dock="Right" Content="Browse" Margin="0,0,10,0" HorizontalAlignment="Right" Click="outputButton_Click">
                         <Button.Style>
@@ -161,10 +229,10 @@
                     <TextBox x:Name="outputTextBox" Margin="10,0,1,0" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Height="20" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
-            <StackPanel Grid.Column="0" Grid.Row="5">
+            <StackPanel Grid.Column="0" Grid.Row="6">
                 <Label x:Name="hashModeLabel" Content="Hash Mode:" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" HorizontalAlignment="Left" Margin="5,0,0,0"/>
             </StackPanel>
-            <StackPanel Grid.Column="0" Grid.Row="6">
+            <StackPanel Grid.Column="0" Grid.Row="7">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -229,7 +297,7 @@
                     </StackPanel>
                 </Grid>
             </StackPanel>
-            <StackPanel Grid.Column="0" Grid.Row="8">
+            <StackPanel Grid.Column="0" Grid.Row="9">
                 <Button x:Name="clearTerminalButton" Content="Clear" HorizontalAlignment="Left" Margin="10,0,0,0" Click="clearTerminalButton_Click">
                     <Button.Style>
                         <Style TargetType="Button">
@@ -256,24 +324,24 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <ListBox Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" x:Name="consoleListBox" Margin="10,1,10,1" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
+            <ListBox Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2" x:Name="consoleListBox" Margin="10,1,10,1" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="White" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Message}" Foreground="{Binding Color}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <StackPanel Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="2">
+            <StackPanel Grid.Column="0" Grid.Row="11" Grid.ColumnSpan="2">
                 <DockPanel Margin="10,0,0,0">
                     <Label x:Name="totalPercentageLabel" DockPanel.Dock="Right" FontFamily="Fonts/#Dosis" Height="25" Width="40" Visibility="Hidden" Content="100%" Foreground="White" Margin="0,0,10,0" HorizontalContentAlignment="Right" IsEnabled="False"/>
                     <Label x:Name="timerLabel" DockPanel.Dock="Left" FontFamily="Fonts/#Dosis" Width="55" Foreground="White" Content="00:00:00"/>
                     <ProgressBar x:Name="totalProgressBar" Foreground="#9126D4" Height="25"/>
                 </DockPanel>
             </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="1">
+            <StackPanel Grid.Column="1" Grid.Row="2">
                 <Label x:Name="existingReportLabel" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Content="Existing Report:" Margin="5,0,0,0" HorizontalAlignment="Left" Width="92"/>
             </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="2">
+            <StackPanel Grid.Column="1" Grid.Row="3">
                 <DockPanel>
                     <Button x:Name="existingReportButton" DockPanel.Dock="Right" Content="Browse" FontFamily="Fonts/#Dosis" Margin="0,0,10,0" HorizontalAlignment="Right" Click="existingReportButton_Click">
                         <Button.Style>
@@ -303,7 +371,7 @@
                     <TextBox x:Name="reportTextBox" Margin="10,0,1,0" Background="#7F000000" FontFamily="Fonts/#Dosis" FontSize="14" Foreground="White" Height="20" VerticalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="4">
+            <StackPanel Grid.Column="1" Grid.Row="5">
                 <Button x:Name="checkButton" Content="Check" FontFamily="Fonts/#Dosis" HorizontalAlignment="Right" Margin="0,0,10,0" Click="checkButton_Click">
                     <Button.Style>
                         <Style TargetType="Button">
@@ -330,7 +398,7 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="6">
+            <StackPanel Grid.Column="1" Grid.Row="7">
                 <Button x:Name="debugButton" Content="DEBUG!" Visibility="Visible" Margin="0,0,10,0" Height="20" HorizontalAlignment="Right" Width="152" Click="debugButton_Click"/>
             </StackPanel>
             <Grid Grid.Column="1" Grid.RowSpan="2" Margin="160, -410, -620, 85" Panel.ZIndex="-1">
