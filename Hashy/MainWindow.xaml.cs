@@ -32,6 +32,8 @@ namespace Hashy
     /// </summary>
     public partial class MainWindow : Window
     {
+        string version = "PRE-RELEASE ALPHA - v0.0.5-alpha";
+
         private static bool isMaximized = false;
         private static Rect originalWindowRect;
 
@@ -57,12 +59,23 @@ namespace Hashy
             // Set the default hash mode to 0 (being MD5):
             hashModeComboBox.SelectedIndex = 0;
 
+            SetLabelContent(TitleVersionLabel, version);
+
             SetScanButtonStatus();
             SetCheckButtonStatus();
             SetClearButtonStatus();
 
             consoleMessages = new ObservableCollection<ConsoleMessage>();
             consoleListBox.ItemsSource = consoleMessages;
+        }
+
+        // TEST debug button not meant for production version:
+        private void debugButton_Click(object sender, EventArgs e)
+        {
+            //var about = new About();
+            //about.Show();
+            hashModeComboBox.IsEnabled = false;
+            Console.ReadLine();
         }
 
         public class ConsoleMessage
@@ -75,15 +88,6 @@ namespace Hashy
                 Message = message;
                 Color = color;
             }
-        }
-
-        // TEST debug button not meant for production version:
-        private void debugButton_Click(object sender, EventArgs e)
-        {
-            //var about = new About();
-            //about.Show();
-            hashModeComboBox.IsEnabled = false;
-            Console.ReadLine();
         }
 
         private void scanButton_Click(object sender, EventArgs e)

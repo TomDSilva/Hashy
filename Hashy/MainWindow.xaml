@@ -88,9 +88,9 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.ColumnSpan="2">
                     <Image Width="20" Height="20" HorizontalAlignment="Left" Source="/Images/Hashy.png"/>
-                    <TextBlock Text="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
+                    <Label Content="Hashy - A file hash checker - By Tom D'Silva © 2022" Foreground="White" Grid.Column="0" VerticalAlignment="Center" FontFamily="Fonts/#Dosis" FontWeight="Medium"/>
                 </DockPanel>
-                <TextBlock Text="PRE-RELEASE ALPHA - v0.0.5-alpha" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
+                <Label Name="TitleVersionLabel" Content ="" Foreground="LightGray" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Fonts/#Dosis"/>
                 <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
                     <StackPanel>
                         <Button Template="{DynamicResource TitleBarButtonTemplate}" Name="MinButton" Height="25" Width="25" Click="MinButton_Click">
